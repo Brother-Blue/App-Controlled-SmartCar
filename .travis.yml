@@ -8,7 +8,7 @@
       - sudo mv arduino-1.6.5 /usr/local/share/arduino
       - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
     install:
-      - arduino --install-library "Smartcar_shield"
+      - arduino --install-library "Smartcar shield"
     script:
       - arduino --verify --board arduino:avr:ESP32 $PWD/SmartCar/SmartCar.ino
     notifications:
