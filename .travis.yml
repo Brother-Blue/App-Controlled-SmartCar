@@ -10,7 +10,7 @@
       - mkdir $HOME/.arduino15
       - wget http://downloads.arduino.cc/libraries/library_index.json -O $HOME/.arduino15/library_index.json
     install:
-      - arduino --install-library "Smartcar shield"
+      - arduino --install-library "https://github.com/platisd/smartcar_shield"
     script:
       - arduino --verify --board arduino:avr:esp32 $PWD/SmartCar/SmartCar.ino
     notifications:
