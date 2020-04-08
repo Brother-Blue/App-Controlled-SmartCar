@@ -1,4 +1,4 @@
-# group-02
+# group-02 [![Build Status](https://travis-ci.com/DIT112-V20/group-02.svg?branch=master)](https://travis-ci.com/DIT112-V20/group-02)
 
 ## What are you going to make?
 

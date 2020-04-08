@@ -4,7 +4,6 @@
 BrushedMotor leftMotor(smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(leftMotor, rightMotor);
-
 BluetoothSerial bluetooth;
 
 const int fSpeed   = 70;  // 70% of the full speed forwards
@@ -30,20 +29,7 @@ void setup(){
   car.setSpeed(targetSpeed);
 }
 
-void loop() {
-
- handleInput();
-  
- distance = front.getDistance();
- Serial.println(distance);
-  
-  
- if(distance < minObstacle && distance > 0){
-  car.setSpeed(0);
-  }
- }
-
- void handleInput(){ // Handle serial input if there is any
+void handleInput(){ // Handle serial input if there is any
   
     if (Serial.available()){
         char input = Serial.read();
@@ -81,4 +67,18 @@ void inputHandler() {
     //Handle user inputs
   }
 }
+void loop() {
+
+ handleInput();
+  
+ distance = front.getDistance();
+ Serial.println(distance);
+  
+  
+ if(distance < minObstacle && distance > 0){
+  car.setSpeed(0);
+  }
+ }
+
+ 
  
