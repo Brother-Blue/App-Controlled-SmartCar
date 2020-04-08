@@ -6,7 +6,7 @@
       - arduino --install-library "ServoESP32"
       - arduino --install-library "Smartcar shield"
     script:
-      - arduino --verify --board arduino:avr:esp32 $PWD/SmartCar/SmartCar.ino
+      - arduino --verify --board arduino:avr:ESP32 $PWD/SmartCar/SmartCar.ino
     notifications:
       email:
         on_success: change
