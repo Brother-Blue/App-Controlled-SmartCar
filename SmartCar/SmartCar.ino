@@ -54,7 +54,15 @@ void handleInput(){ // Handle serial input if there is any
             car.setSpeed(bSpeed);
             car.setAngle(0);
             break;
+        
+        case 'c': //Increases carspeed by 10%
+            //car.setSpeed(car.getSpeed() + 10);
+            break;
 
+        case 'd': //Decreases carspeed by 10%
+            //car.setSpeed(car.getSpeed() - 10);
+            break;
+            //TODO Implement SmartCar to access getSpeed-method. See new issue in Git
         default: 
             car.setSpeed(0);
             car.setAngle(0);
@@ -79,6 +87,3 @@ void loop() {
   car.setSpeed(0);
   }
  }
-
- 
- 
