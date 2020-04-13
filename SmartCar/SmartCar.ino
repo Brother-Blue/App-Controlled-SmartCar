@@ -4,17 +4,21 @@
 BrushedMotor leftMotor(smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(leftMotor, rightMotor);
+
 BluetoothSerial bluetooth;
-HeadingSensor headingSensor;
-Odometer odometer;
-Runtime runtime;
+
+GY50 gyroscope(37);
+
+unsigned short ODOMETER_PIN = 32;
+unsigned long PULSES_PER_METER = 110;
+DirectionlessOdometer odometer(ODOMETER_PIN,[]() { odometer.update(); }, PULSES_PER_METER);
 
 const int fSpeed   = 70;  // 70% of the full speed forwards
 const int bSpeed   = -70; // 70% of the full speed backwards
 const int lDegrees = -75; // Degrees to turn left
 const int rDegrees = 75;  // Degrees to turn right
 
-SmartCar car(control,headingSensor,odometer,runtime);
+SmartCar car(control, gyroscope, odometer);
 
 const int minObstacle = 20;
 const int targetSpeed = 35;
