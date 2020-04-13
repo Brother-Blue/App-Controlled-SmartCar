@@ -11,7 +11,7 @@ const int bSpeed   = -70; // 70% of the full speed backwards
 const int lDegrees = -75; // Degrees to turn left
 const int rDegrees = 75;  // Degrees to turn right
 
-SimpleCar car(control);
+SmartCar car(control, headingSensor, odometer, runtime);
 
 const int minObstacle = 20;
 const int targetSpeed = 35;
@@ -54,15 +54,7 @@ void handleInput(){ // Handle serial input if there is any
             car.setSpeed(bSpeed);
             car.setAngle(0);
             break;
-        
-        case 'c': //Increases carspeed by 10%
-            //car.setSpeed(car.getSpeed() + 10);
-            break;
 
-        case 'd': //Decreases carspeed by 10%
-            //car.setSpeed(car.getSpeed() - 10);
-            break;
-            //TODO Implement SmartCar to access getSpeed-method. See new issue in Git
         default: 
             car.setSpeed(0);
             car.setAngle(0);
@@ -87,3 +79,6 @@ void loop() {
   car.setSpeed(0);
   }
  }
+
+ 
+ 
