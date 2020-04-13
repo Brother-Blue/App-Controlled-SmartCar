@@ -5,13 +5,16 @@ BrushedMotor leftMotor(smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(leftMotor, rightMotor);
 BluetoothSerial bluetooth;
+HeadingSensor headingSensor;
+Odometer odometer;
+Runtime runtime;
 
 const int fSpeed   = 70;  // 70% of the full speed forwards
 const int bSpeed   = -70; // 70% of the full speed backwards
 const int lDegrees = -75; // Degrees to turn left
 const int rDegrees = 75;  // Degrees to turn right
 
-SimpleCar car(control);
+SmartCar car(control,headingSensor,odometer,runtime);
 
 const int minObstacle = 20;
 const int targetSpeed = 35;
