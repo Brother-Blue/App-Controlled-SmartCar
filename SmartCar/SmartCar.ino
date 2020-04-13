@@ -9,7 +9,7 @@ BluetoothSerial bluetooth;
 
 GY50 gyroscope(37);
 
-ArduinoRuntime runtime();
+ArduinoRuntime runtime;
 
 unsigned short ODOMETER_PIN = 32;
 unsigned long PULSES_PER_METER = 110;
@@ -20,7 +20,7 @@ const int bSpeed   = -70; // 70% of the full speed backwards
 const int lDegrees = -75; // Degrees to turn left
 const int rDegrees = 75;  // Degrees to turn right
 
-SmartCar car(control, gyroscope, odometer, runtime);
+SmartCar car(control, gyroscope, odometer);
 
 const int minObstacle = 20;
 const int targetSpeed = 35;
