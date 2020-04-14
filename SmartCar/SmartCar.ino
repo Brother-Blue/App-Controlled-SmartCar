@@ -89,7 +89,7 @@ void loop() {
   
  Serial.println(front.getDistance()); // Ultrasonic sensor
   
- Serial.println(odometer.getDistance()); // Odometer
+ Serial.println(leftOdometer.getDistance() + " " + rightOdometer.getDistance()); // Odometer
 
  gyro.update();
  Serial.println(gyro.getHeading()); // Gyroscope
