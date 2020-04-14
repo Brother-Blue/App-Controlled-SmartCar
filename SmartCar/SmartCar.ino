@@ -11,14 +11,15 @@ const int GYROSCOPE_OFFSET = 37;
 GY50 gyro(GYROSCOPE_OFFSET); // The offset we have acquired via the getOffset method
 
 const unsigned long PULSES_PER_METER = 600;
-DirectionlessOdometer odometer(smartcarlib::pins::v2::leftOdometerPin,[]() { odometer.update(); }, PULSES_PER_METER);
+DirectionlessOdometer leftOdometer(smartcarlib::pins::v2::leftOdometerPin,[]() { leftOdometer.update(); }, PULSES_PER_METER);
+DirectionlessOdometer rightOdometer(smartcarlib::pins::v2::rightOdometerPin, []() { rightOdometer.update(); }, PULSES_PER_METER);
 
 const int fSpeed   = 70;  // 70% of the full speed forwards
 const int bSpeed   = -70; // 70% of the full speed backwards
 const int lDegrees = -75; // Degrees to turn left
 const int rDegrees = 75;  // Degrees to turn right
 
-SmartCar car(control, gyro, odometer);  // Initializing of the car
+SmartCar car(control, gyro, leftOdometer, rightOdometer);  // Initializing of the car
 
 const int minObstacle = 20;
 const int targetSpeed = 35;
