@@ -4,14 +4,22 @@
 BrushedMotor leftMotor(smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(leftMotor, rightMotor);
+
 BluetoothSerial bluetooth;
+
+const int GYROSCOPE_OFFSET = 37;
+GY50 gyro(GYROSCOPE_OFFSET); // The offset we have acquired via the getOffset method
+
+const unsigned long PULSES_PER_METER = 600;
+DirectionlessOdometer leftOdometer(smartcarlib::pins::v2::leftOdometerPin,[]() { leftOdometer.update(); }, PULSES_PER_METER);
+DirectionlessOdometer rightOdometer(smartcarlib::pins::v2::rightOdometerPin, []() { rightOdometer.update(); }, PULSES_PER_METER);
 
 const int fSpeed   = 70;  // 70% of the full speed forwards
 const int bSpeed   = -70; // 70% of the full speed backwards
 const int lDegrees = -75; // Degrees to turn left
 const int rDegrees = 75;  // Degrees to turn right
 
-SimpleCar car(control);
+SmartCar car(control, gyro, leftOdometer, rightOdometer);  // Initializing of the car
 
 const int minObstacle = 20;
 const int targetSpeed = 35;
@@ -55,14 +63,14 @@ void handleInput(){ // Handle serial input if there is any
             car.setAngle(0);
             break;
         
-        case 'c': //Increases carspeed by 10%
+        case 'c': // Increases carspeed by 10%
             //car.setSpeed(car.getSpeed() + 10);
             break;
 
-        case 'd': //Decreases carspeed by 10%
-            //car.setSpeed(car.getSpeed() - 10);
+        case 'd': // Decreases carspeed by 10%
+            // car.setSpeed(car.getSpeed() - 10);
             break;
-            //TODO Implement SmartCar to access getSpeed-method. See new issue in Git
+            // TODO Implement SmartCar to access getSpeed-method. See new issue in Git
         default: 
             car.setSpeed(0);
             car.setAngle(0);
@@ -72,16 +80,19 @@ void handleInput(){ // Handle serial input if there is any
 
 void inputHandler() {
   if (bluetooth.available()) {
-    //Handle user inputs
+    // Handle user inputs
   }
 }
 void loop() {
 
  handleInput();
   
- distance = front.getDistance();
- Serial.println(distance);
+ Serial.println(front.getDistance()); // Ultrasonic sensor
   
+ Serial.println(leftOdometer.getDistance() + " " + rightOdometer.getDistance()); // Odometer
+
+ gyro.update();
+ Serial.println(gyro.getHeading()); // Gyroscope
   
  if(distance < minObstacle && distance > 0){
   car.setSpeed(0);
