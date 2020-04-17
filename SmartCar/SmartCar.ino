@@ -34,15 +34,12 @@ void setup(){
   Serial.begin(9600);
   bluetooth.begin("Group 2 SmartCar");
   Serial.print("Ready to connect!");
-  car.setSpeed(targetSpeed);
 }
 
-void handleInput(){ // Handle serial input if there is any
-  
-    if (Serial.available()){
-        char input = Serial.read();
-                                    
+void handleInput(char input){ // Handle serial input if there is any
+             
         switch (input){
+
         case 'l': // Turn Left
             car.setSpeed(fSpeed);
             car.setAngle(lDegrees);
@@ -75,26 +72,21 @@ void handleInput(){ // Handle serial input if there is any
             car.setSpeed(0);
             car.setAngle(0);
         }
+    
+}
+
+void readBluetooth() {
+
+    while (bluetooth.available()) {
+        char input = bluetooth.read();
+        handleInput(input);
     }
 }
 
-void inputHandler() {
-  if (bluetooth.available()) {
-    // Handle user inputs
-  }
-}
 void loop() {
-
- handleInput();
-  
- Serial.println(front.getDistance()); // Ultrasonic sensor
-  
- Serial.println(leftOdometer.getDistance() + " " + rightOdometer.getDistance()); // Odometer
-
- gyro.update();
- Serial.println(gyro.getHeading()); // Gyroscope
-  
- if(distance < minObstacle && distance > 0){
-  car.setSpeed(0);
-  }
+    readBluetooth();
+    distance = front.getDistance();
+    if(distance < minObstacle && distance > 0){
+        car.setSpeed(0);
+    }
  }
