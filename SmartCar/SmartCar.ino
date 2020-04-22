@@ -3,13 +3,13 @@
 
 BluetoothSerial bluetooth;
 
-const int speed = 70;     // 70% of the full speed
-const int turnAngle = 75; // Degrees to turn
+const int speed = 70;       // 70% of the full speed
+const int turnAngle = 75;   // Degrees to turn
 const int minObstacle = 20; // Minimum distance ahead to obstacle
 
 float distance;
 
-boolean atObstacle = false; 
+boolean atObstacle = false;
 
 //const int TRIGGER_PIN = 5; // Trigger signal for ultrasonic
 //const int ECHO_PIN = 18; // Reads signal for ultrasonic
@@ -57,33 +57,34 @@ void turnLeft(int degrees, int turnSpeed = speed)
     car.setAngle(degrees);
 }
 
-void driveForward(int speed)
+void driveForward(int driveSpeed = speed)
 {
     if (car.getSpeed() < 0)
-    {                              // Fixes motor overloading
-        while (car.getSpeed() < - 20) // Used 20 as a threshold
+    {                                // Fixes motor overloading
+        while (car.getSpeed() < -20) // Used -20 as a threshold
         {
             car.setSpeed(car.getSpeed() + 10);
         }
     }
-    car.setSpeed(speed);
+    car.setSpeed(driveSpeed);
     car.setAngle(0);
 }
 
-void driveBackward(int speed)
+void driveBackward(int driveSpeed = speed)
 {
     if (car.getSpeed() > 0)
-    {                             // Fixes motor overloading
+    {                               // Fixes motor overloading
         while (car.getSpeed() > 20) // Used 20 as a threshold
         {
             car.setSpeed(car.getSpeed() - 10);
         }
     }
     car.setAngle(0);
-    car.setSpeed(speed);
+    car.setSpeed(driveSpeed);
 }
 
-boolean tryTurning() {
+boolean tryTurning()
+{
     while (atObstacle)
     {
         // Try turning right
@@ -111,24 +112,30 @@ boolean tryTurning() {
             }
         }
         car.setAngle(0);
-        if (atObstacle) return true;
+        if (atObstacle)
+            return true;
     }
     return atObstacle;
 }
 
 void driveWithAvoidance()
 {
-    driveForward(speed);
+    if (!atObstacle)
+        driveForward(speed);
     distance = sideFrontIR.getMedianDistance();
     if (distance > 0 && distance <= minObstacle)
     {
         atObstacle = true;
         car.setSpeed(0);
         car.setAngle(0);
-        atObstacle = tryTurning();
+        while (atObstacle)
+        {
+            driveBackward(-10);
+            delay(1000); //FIXME: LINUS check how much car moves in 1 second
+            car.setSpeed(0);
+            atObstacle = tryTurning();
+        }
     }
-    driveBackward(-10);
-    delay(1000); //FIXME: LINUS check how much car moves in 1 second
 }
 
 void handleInput(char input)
@@ -154,7 +161,7 @@ void handleInput(char input)
         break;
 
     case 'b': // Backwards
-        driveBackward(- speed);
+        driveBackward(-speed);
         break;
 
     case 'i': // Increases carspeed by 10%
@@ -182,6 +189,5 @@ void readBluetooth()
 
 void loop()
 {
-    readBluetooth();
-    driveWithAvoidance();
+    readBluetooth(); //manual
 }
