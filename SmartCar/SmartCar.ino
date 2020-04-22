@@ -5,8 +5,11 @@ BluetoothSerial bluetooth;
 
 const int speed = 70;     // 70% of the full speed
 const int turnAngle = 75; // Degrees to turn
-
 const int minObstacle = 20; // Minimum distance ahead to obstacle
+
+float distance;
+
+boolean atObstacle = false; 
 
 //const int TRIGGER_PIN = 5; // Trigger signal for ultrasonic
 //const int ECHO_PIN = 18; // Reads signal for ultrasonic
@@ -22,7 +25,7 @@ const int GYROSCOPE_OFFSET = 37;
 
 GP2Y0A21 sideFrontIR(SIDE_FRONT_PIN); // Infrared sensor (12-78 cm distance reading)
 
-GY50 gyro(GYROSCOPE_OFFSET); // Gyroscope sensorconst int rDegrees = 75;  // Degrees to turn right
+GY50 gyro(GYROSCOPE_OFFSET); // Gyroscope sensor const int rDegrees = 75;  // Degrees to turn right
 
 DirectionlessOdometer leftOdometer(
     smartcarlib::pins::v2::leftOdometerPin, []() { leftOdometer.update(); }, PULSES_PER_METER); // Odometer sensor
@@ -113,10 +116,9 @@ boolean tryTurning() {
     return atObstacle;
 }
 
-float distance;
-boolean atObstacle = false;
 void driveWithAvoidance()
 {
+    driveForward(speed);
     distance = sideFrontIR.getMedianDistance();
     if (distance > 0 && distance <= minObstacle)
     {
@@ -125,7 +127,7 @@ void driveWithAvoidance()
         car.setAngle(0);
         atObstacle = tryTurning();
     }
-    car.setSpeed(- 10);
+    driveBackward(-10);
     delay(1000); //FIXME: LINUS check how much car moves in 1 second
 }
 
