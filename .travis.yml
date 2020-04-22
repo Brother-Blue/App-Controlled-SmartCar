@@ -5,6 +5,7 @@
       - arduino --install-library "ESP32 AnalogWrite"
       - arduino --install-library "ServoESP32"
       - arduino --install-library "Smartcar shield"
+      - arduino --install-library "VL53L0X"
     script:
       - build_platform esp32
     notifications:
