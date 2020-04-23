@@ -69,10 +69,11 @@ void turnLeft(int degrees, int turnSpeed = speed)
 void driveForward(int driveSpeed = speed)
 {
     if (car.getSpeed() > 0)
-    {                     
-        while (car.getSpeed() > 20) // Used 20 as a threshold
+    {                                // Fixes motor overloading
+        while (car.getSpeed() < -20) // Used -20 as a threshold
         {
-            car.setSpeed(car.getSpeed() - 10);
+            car.setSpeed(car.getSpeed() + 10);
+            delay(100);
         }
     }
     car.setSpeed(driveSpeed);
@@ -86,6 +87,7 @@ void driveBackward(int driveSpeed = -speed)
         while (car.getSpeed() > 20) // Used 20 as a threshold
         {
             car.setSpeed(car.getSpeed() - 10);
+            delay(100);
         }
     }
     car.setAngle(0);
@@ -135,7 +137,7 @@ boolean tryTurning()
         for (int i = car.getHeading(); i > turnAngle; i -= 5)
         {
             // Increment steering to the right and check if space is free
-            turnLeft(i, 20);
+            turnLeft(i, 20);// Fixes motor overloading
             delay(100);
             if (frontDistance > 85) // 85 was used as 100 is the max range for the LIDAR sensor
             {
