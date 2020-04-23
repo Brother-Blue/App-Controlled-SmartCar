@@ -22,7 +22,7 @@ const int TRIGGER_PIN = 5; // Trigger signal for ultrasonic
 const int ECHO_PIN = 18; // Reads signal for ultrasonic
 
 //FIXME: Make sure this is the correct pin on the vehicle :)
-const int SIDE_FRONT_PIN = A0; // Infrared reader
+const int SIDE_FRONT_PIN = A0; // LIDAR Sensor pin
 
 const unsigned long PULSES_PER_METER = 600; // Amount of odometer pulses per 1 meter
 
@@ -46,6 +46,7 @@ void setup()
 {
     Serial.begin(9600);
     frontSensor.init();
+    Wire.begin();
     bluetooth.begin("Group 2 SmartCar");
     Serial.print("Ready to connect!");
     frontSensor.setTimeout(500);
