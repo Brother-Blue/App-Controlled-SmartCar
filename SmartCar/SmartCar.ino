@@ -5,38 +5,45 @@
 
 BluetoothSerial bluetooth;
 
-const int speed = 70;       // 70% of the full speed
-const int turnAngle = 75;   // 75 Degrees to turn
-const int minObstacle = 20; // Minimum distance ahead to obstacle
-const int GYROSCOPE_OFFSET = 37;
+// Constansts
+const int SPEED = 70;        // 70% of the full speed
+const int TURN_ANGLE = 75;   // 75 Degrees to turn
+const int MIN_OBSTACLE = 20; // Minimum distance ahead to obstacle
+const int GYROSCOPE_OFFSET = 48;
+const unsigned int MAX_DISTANCE = 100; // Max distance to measure with ultrasonic
+
+// Unsigned
 unsigned int error = 0; //FIXME: Need to calculate error for LIDAR sensor readings.
 unsigned int frontDistance;
 unsigned int backDistance;
-const unsigned int MAX_DISTANCE = 100; // Max distance to measure with ultrasonic
 
+// Boolean
 boolean atObstacle = false;
+boolean autoDriving = false;
 
-//FIXME: Make sure ultrasonic pins are correct for side or behind :)
-const int TRIGGER_PIN = 5; // Trigger signal for ultrasonic
-const int ECHO_PIN = 18;   // Reads signal for ultrasonic
+// Ultrasonic trigger pins
+const int TRIGGER_PIN = 5; // Trigger signal
+const int ECHO_PIN = 18;   // Reads signal
 
+// Sensor pins
+SR04 back(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // Ultrasonic
+VL53L0X frontSensor;                            // Micro LIDAR
+GY50 gyro(GYROSCOPE_OFFSET);                    // Gyroscope
+
+// Odometer
 const unsigned long PULSES_PER_METER = 600; // Amount of odometer pulses per 1 meter
-
-SR04 back(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // Ultrasonic sensor
-VL53L0X frontSensor;                            // Micro LIDAR sensor
-
-GY50 gyro(GYROSCOPE_OFFSET); // Gyroscope sensor
-
 DirectionlessOdometer leftOdometer(
-    smartcarlib::pins::v2::leftOdometerPin, []() { leftOdometer.update(); }, PULSES_PER_METER); // Odometer sensors
+    smartcarlib::pins::v2::leftOdometerPin, []() { leftOdometer.update(); }, PULSES_PER_METER);
 DirectionlessOdometer rightOdometer(
     smartcarlib::pins::v2::rightOdometerPin, []() { rightOdometer.update(); }, PULSES_PER_METER);
 
-BrushedMotor leftMotor(smartcarlib::pins::v2::leftMotorPins); // Car motors
+// Car motors
+BrushedMotor leftMotor(smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(leftMotor, rightMotor);
 
-SmartCar car(control, gyro, leftOdometer, rightOdometer); // Initializing of the car
+// Car initializing
+SmartCar car(control, gyro, leftOdometer, rightOdometer);
 
 void setup()
 {
@@ -50,47 +57,44 @@ void setup()
         {
         }
     }
-
     frontSensor.startContinuous(100);
     bluetooth.begin("Group 2 SmartCar");
     Serial.print("Ready to connect!");
 }
 
-void turnRight(int degrees, int turnSpeed = speed) // Manual right turn
+void turnRight(unsigned int degrees = TURN_ANGLE, int turnSpeed = car.getSpeed()) // Manual right turn
 {
+    if (turnSpeed == 0)
+        turnSpeed = 10; //FIXME: Check how much car moves
     car.setSpeed(turnSpeed);
     car.setAngle(degrees);
 }
 
-void turnLeft(int degrees, int turnSpeed = speed) // Manual left turn
+void turnLeft(int degrees = -TURN_ANGLE, int turnSpeed = car.getSpeed()) // Manual left turn
 {
+    if (turnSpeed == 0)
+        turnSpeed = 10; //FIXME: Check how much car moves
     car.setSpeed(turnSpeed);
     car.setAngle(degrees);
 }
 
-void driveForward(int driveSpeed = speed) // Manual fordwards drive
+void driveForward(int driveSpeed = SPEED) // Manual forward drive
 {
-    if (car.getSpeed() < 0)          // If car is currently going backward
-    {                                // reverse slowly to fix motor overloading.
-        while (car.getSpeed() < -10) // Using -10 as a threshold
-        {
-            car.setSpeed(car.getSpeed() + 10);
-            delay(100); //FIXME: Check if reverse is to fast or slow
-        }
+    while (car.getSpeed() > driveSpeed) // Slowly increase carspeed
+    {
+        car.setSpeed(car.getSpeed() + 10);
+        delay(50);
     }
     car.setAngle(0);
     car.setSpeed(driveSpeed);
 }
 
-void driveBackward(int driveSpeed = -speed) // Manual backwards drive
+void driveBackward(int driveSpeed = -SPEED) // Manual backwards drive
 {
-    if (car.getSpeed() > 0)         // If car is currently going forward
-    {                               // reverse slowly to fix motor overloading.
-        while (car.getSpeed() > 10) // Using 10 as a threshold
-        {
-            car.setSpeed(car.getSpeed() - 10);
-            delay(100); //FIXME: Check if reverse is to fast or slow
-        }
+    while (car.getSpeed() > driveSpeed) // Slowly decrease carspeed
+    {
+        car.setSpeed(car.getSpeed() - 10);
+        delay(50);
     }
     car.setAngle(0);
     car.setSpeed(driveSpeed);
@@ -111,12 +115,12 @@ void checkDistance() // Obstacle interference
         Serial.print("VL53L0X sensor timeout occurred.");
     }
 
-    if (frontDistance > 0 && frontDistance <= minObstacle)
+    if (frontDistance > 0 && frontDistance <= MIN_OBSTACLE)
     {
         atObstacle = true;
         brake();
     }
-    if (backDistance > 0 && backDistance <= minObstacle)
+    if (backDistance > 0 && backDistance <= MIN_OBSTACLE)
     {
         brake();
     }
@@ -124,90 +128,71 @@ void checkDistance() // Obstacle interference
 
 boolean tryTurning() // Try finding a new path around obstacle
 {
-    while (atObstacle)
+    atObstacle = false;
+    turnRight();     // Turn 75 degrees right
+    checkDistance(); // Recheck if there's an obstacle in front, if not return false.
+    if (atObstacle)
     {
-        // Try turning right
-        for (int i = car.getHeading(); i < turnAngle; i += 5)
-        {
-            // Increment steering to the right and check if space is free
-            turnRight(i, 20);
-            delay(100);
-            if (frontDistance > 85) // 85 was used as 100 is the max range for the LIDAR sensor
-            {
-                atObstacle = false;
-                break;
-            }
-        }
-        // Try turning left
-        for (int i = car.getHeading(); i > -turnAngle; i -= 5)
-        {
-            // Increment steering to the right and check if space is free
-            turnLeft(i, -20);
-            delay(100);
-            if (frontDistance > 85) // 85 was used as 100 is the max range for the LIDAR sensor
-            {
-                atObstacle = false;
-                break;
-            }
-        }
-        car.setAngle(0);
+        turnLeft(); // Turn 150 degrees to the left
+        turnLeft();
+        checkDistance();
         if (atObstacle)
-            return true;
+            car.setAngle(75);
     }
     return atObstacle;
 }
 
 void driveWithAvoidance()
 {
-    if (!atObstacle)
+    while (autoDriving) // While in automatic driving mode.
     {
-        checkDistance();
-        driveForward(speed);
-    }
-    while (atObstacle && backDistance >= minObstacle)
-    {
-        driveBackward(-10);
-        if (backDistance <= minObstacle)
+        driveForward();
+        while (!atObstacle) // While you're not at an obstacle
         {
-            brake();
+            checkDistance();
         }
-        delay(500); //FIXME: Linus please check how far the car goes during a 500 delay. :)
-        brake();
-        atObstacle = tryTurning();
+        while (atObstacle) // While you're at an obstacle
+        {
+            driveBackward(-20);
+            delay(1000); //TODO: Implement odometer distance checking
+            brake();
+            atObstacle = tryTurning();
+        }
     }
 }
 
 void handleInput(char input) // Handle serial input if there is any
 {
-
+    if (input != 'a')
+        autoDriving = false;
     switch (input)
     {
-
     case 'a': // Automatic driving with obstacle avoidance
+        autoDriving = true;
         driveWithAvoidance();
         break;
 
     case 'l': // Left turn
-        turnLeft(-turnAngle);
+        turnLeft();
         break;
 
     case 'r': // Right turn
-        turnRight(turnAngle);
+        turnRight();
         break;
 
     case 'f': // Forward
-        driveForward(speed);
+        driveForward();
         break;
 
     case 'b': // Backwards
-        driveBackward(-speed);
+        driveBackward();
         break;
 
     case 'i': // Increases carspeed by 10%
         car.setSpeed(car.getSpeed() + 10);
         break;
 
-    case 'q': // Decreases carspeed by 10%
+    case 'd': // Decreases carspeed by 10%
         car.setSpeed(car.getSpeed() - 10);
         break;
 
@@ -229,4 +214,5 @@ void loop()
 {
     readBluetooth();
     checkDistance(); // Checks distance in manual mode.
+    gyro.update();
 }
