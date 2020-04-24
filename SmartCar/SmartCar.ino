@@ -65,7 +65,7 @@ void setup()
 void turnRight(unsigned int degrees = TURN_ANGLE, int turnSpeed = car.getSpeed()) // Manual right turn
 {
     if (turnSpeed == 0)
-        turnSpeed = 10; //FIXME: Check how much car moves
+        turnSpeed = 10; 
     car.setSpeed(turnSpeed);
     car.setAngle(degrees);
 }
@@ -151,10 +151,10 @@ void driveWithAvoidance()
         {
             checkDistance();
         }
-        while (atObstacle) // While you're at an obstacle
+        if (atObstacle) // While you're at an obstacle
         {
             driveBackward(-20);
-            delay(1000); //TODO: Implement odometer distance checking
+            delay(100); //TODO: Implement odometer distance checking
             brake();
             atObstacle = tryTurning();
         }
