@@ -153,8 +153,8 @@ void driveWithAvoidance()
         }
         if (atObstacle) // While you're at an obstacle
         {
-            driveBackward(-20);
-            delay(100); //TODO: Implement odometer distance checking
+            car.setSpeed(-20);
+            delay(500); //TODO: Implement odometer distance checking
             brake();
             atObstacle = tryTurning();
         }
