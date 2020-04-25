@@ -158,11 +158,9 @@ void checkDistance() // Obstacle interference
     }
 }
 
-boolean avoidObstacle() // Try finding a new path around obstacle
+void avoidObstacle() // Try finding a new path around obstacle
 {
-    int dist = 0;
-    //FIXME: Requires update to resolve backing up issue.
-    
+    driveBackwardDistance(50);    
     atObstacle = false;
     turnRight();     // Turn 75 degrees right
     checkDistance(); // Recheck if there's an obstacle in front, if not return false.
@@ -174,14 +172,13 @@ boolean avoidObstacle() // Try finding a new path around obstacle
         if (atObstacle)
             car.setAngle(75);
     }
-    return atObstacle;
 }
 
 void driveWithAvoidance()
 {
     if (atObstacle) // While you're at an obstacle
     {
-        atObstacle = avoidObstacle();
+        avoidObstacle();
     } else {
         driveForward();
     }
