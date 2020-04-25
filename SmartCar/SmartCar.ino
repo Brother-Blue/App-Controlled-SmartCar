@@ -6,7 +6,7 @@
 BluetoothSerial bluetooth;
 
 // Constansts
-const int SPEED = 70;        // 70% of the full speed
+const int SPEED = 70;        // 70 m/s
 const int TURN_ANGLE = 75;   // 75 Degrees to turn
 const int MIN_OBSTACLE = 20; // Minimum distance ahead to obstacle
 const int GYROSCOPE_OFFSET = 48;
@@ -65,45 +65,77 @@ void setup()
 void turnRight(unsigned int degrees = TURN_ANGLE, int turnSpeed = car.getSpeed()) // Manual right turn
 {
     if (turnSpeed == 0)
-        turnSpeed = 10; 
-    car.setSpeed(turnSpeed);
+        turnSpeed = 10;
     car.setAngle(degrees);
+    car.setSpeed(turnSpeed);
 }
 
 void turnLeft(int degrees = -TURN_ANGLE, int turnSpeed = car.getSpeed()) // Manual left turn
 {
+    if (degrees > 0) degrees = -degrees;
     if (turnSpeed == 0)
         turnSpeed = 10; //FIXME: Check how much car moves
-    car.setSpeed(turnSpeed);
     car.setAngle(degrees);
+    car.setSpeed(turnSpeed);
 }
 
-void driveForward(int driveSpeed = SPEED) // Manual forward drive
+void driveForward(unsigned int driveSpeed = SPEED) // Manual forward drive
 {
-    while (car.getSpeed() > driveSpeed) // Slowly increase carspeed
+    while (car.getSpeed() < driveSpeed) // Slowly increase carspeed
     {
         car.setSpeed(car.getSpeed() + 10);
-        delay(50);
     }
     car.setAngle(0);
     car.setSpeed(driveSpeed);
+}
+
+void driveForwardDistance(unsigned int driveSpeed = SPEED, unsigned int distance = 1)
+{
+    int cur = 0;
+    leftOdometer.reset();
+    rightOdometer.reset();
+    driveForward(driveSpeed);
+    while (cur < distance) 
+    {
+        cur = getOdometerDist();
+    }
+    brake();
 }
 
 void driveBackward(int driveSpeed = -SPEED) // Manual backwards drive
 {
+    if (driveSpeed > 0) driveSpeed = -driveSpeed;
     while (car.getSpeed() > driveSpeed) // Slowly decrease carspeed
     {
         car.setSpeed(car.getSpeed() - 10);
-        delay(50);
     }
     car.setAngle(0);
     car.setSpeed(driveSpeed);
+}
+
+void driveBackwardDistance(int driveSpeed = -SPEED, unsigned int distance = 1)
+{
+    if (driveSpeed > 0) driveSpeed = -driveSpeed;
+    int cur = 0;
+    leftOdometer.reset();
+    rightOdometer.reset();
+    driveBackward(driveSpeed);
+    while (cur > distance)
+    {
+        cur = getOdometerDist();
+    }
+    brake();
 }
 
 void brake() // Carstop
 {
     car.setSpeed(0);
     car.setAngle(0);
+}
+
+int getOdometerDist()
+{
+    return (leftOdometer.getDistance() + rightOdometer.getDistance()) / 2;
 }
 
 void checkDistance() // Obstacle interference
@@ -126,8 +158,11 @@ void checkDistance() // Obstacle interference
     }
 }
 
-boolean tryTurning() // Try finding a new path around obstacle
+boolean avoidObstacle() // Try finding a new path around obstacle
 {
+    int dist = 0;
+    //FIXME: Requires update to resolve backing up issue.
+    
     atObstacle = false;
     turnRight();     // Turn 75 degrees right
     checkDistance(); // Recheck if there's an obstacle in front, if not return false.
@@ -144,20 +179,15 @@ boolean tryTurning() // Try finding a new path around obstacle
 
 void driveWithAvoidance()
 {
-    while (autoDriving) // While in automatic driving mode.
+    if (atObstacle) // While you're at an obstacle
     {
+        atObstacle = avoidObstacle();
+    } else {
         driveForward();
-        while (!atObstacle) // While you're not at an obstacle
-        {
-            checkDistance();
-        }
-        if (atObstacle) // While you're at an obstacle
-        {
-            car.setSpeed(-20);
-            delay(500); //TODO: Implement odometer distance checking
-            brake();
-            atObstacle = tryTurning();
-        }
+    }
+    while (!atObstacle) // While you're not at an obstacle
+    {
+        checkDistance();
     }
 }
 
@@ -188,11 +218,11 @@ void handleInput(char input) // Handle serial input if there is any
         driveBackward();
         break;
 
-    case 'i': // Increases carspeed by 10%
+    case 'i': // Increases carspeed by 10 m/s
         car.setSpeed(car.getSpeed() + 10);
         break;
 
-    case 'd': // Decreases carspeed by 10%
+    case 'd': // Decreases carspeed by 10 m/s
         car.setSpeed(car.getSpeed() - 10);
         break;
 
@@ -215,4 +245,5 @@ void loop()
     readBluetooth();
     checkDistance(); // Checks distance in manual mode.
     gyro.update();
+    if (autoDriving) driveWithAvoidance();
 }
