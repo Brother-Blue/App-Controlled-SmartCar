@@ -81,7 +81,7 @@ void turnRightInPlace(unsigned int degrees = TURN_ANGLE, unsigned int turnSpeed 
         targetPos = targetPos - 360;
     leftMotor.setSpeed(turnSpeed);   // Invert motors to turn car in place. Left motors must turn
     rightMotor.setSpeed(-turnSpeed); // forward while right goes backward in order to turn right
-    while (gyro.getHeading() < targetPos - 3 || gyro.getHeading() > targetPos > 3)
+    while (gyro.getHeading() < targetPos - 3 || gyro.getHeading() > targetPos + 3)
     {
         gyro.update();
     }
@@ -110,7 +110,7 @@ void turnLeftInPlace(int degrees = -TURN_ANGLE, unsigned int turnSpeed = car.get
         targetPos = 360 + targetPos;
     leftMotor.setSpeed(-turnSpeed); // Invert motors to turn car in place. Right motors must turn
     rightMotor.setSpeed(turnSpeed); // forward while left goes backward in order to turn left
-    while (gyro.getHeading() != targetPos)
+    while (gyro.getHeading() < targetPos - 3 || gyro.getHeading() > targetPos + 3)
     {
         gyro.update();
     }
