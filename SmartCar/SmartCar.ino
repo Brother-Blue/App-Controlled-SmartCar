@@ -70,13 +70,52 @@ void turnRight(unsigned int degrees = TURN_ANGLE, int turnSpeed = car.getSpeed()
     car.setSpeed(turnSpeed);
 }
 
+void turnRightInPlace(unsigned int degrees = TURN_ANGLE, unsigned int turnSpeed = car.getSpeed())
+{
+    if (turnSpeed == 0)
+        turnSpeed = 20;
+    gyro.update(); // Get current heading and save it.
+    int curPos = gyro.getHeading();
+    int targetPos = degrees + curPos; // Calculate new heading and normalize it to [0-360).
+    if (targetPos > 360)
+        targetPos = targetPos - 360;
+    leftMotor.setSpeed(turnSpeed);   // Invert motors to turn car in place. Left motors must turn
+    rightMotor.setSpeed(-turnSpeed); // forward while right goes backward in order to turn right
+    while (gyro.getHeading() < targetPos - 3 || gyro.getHeading() > targetPos > 3)
+    {
+        gyro.update();
+    }
+    brake();
+    gyro.update();
+}
+
 void turnLeft(int degrees = -TURN_ANGLE, int turnSpeed = car.getSpeed()) // Manual left turn
 {
-    if (degrees > 0) degrees = -degrees;
+    if (degrees > 0)
+        degrees = -degrees;
     if (turnSpeed == 0)
         turnSpeed = 10; //FIXME: Check how much car moves
     car.setAngle(degrees);
     car.setSpeed(turnSpeed);
+}
+
+void turnLeftInPlace(int degrees = -TURN_ANGLE, unsigned int turnSpeed = car.getSpeed())
+{
+    if (turnSpeed == 0)
+        turnSpeed = 20;
+    gyro.update(); // Get current heading and save it.
+    int curPos = gyro.getHeading();
+    int targetPos = degrees + curPos; // Calculate new heading and normalize it to [0-360).
+    if (targetPos < 0)
+        targetPos = 360 + targetPos;
+    leftMotor.setSpeed(-turnSpeed); // Invert motors to turn car in place. Right motors must turn
+    rightMotor.setSpeed(turnSpeed); // forward while left goes backward in order to turn left
+    while (gyro.getHeading() != targetPos)
+    {
+        gyro.update();
+    }
+    brake();
+    gyro.update();
 }
 
 void driveForward(unsigned int driveSpeed = SPEED) // Manual forward drive
@@ -95,16 +134,17 @@ void driveForwardDistance(unsigned int driveSpeed = SPEED, unsigned int distance
     leftOdometer.reset();
     rightOdometer.reset();
     driveForward(driveSpeed);
-    while (cur < distance) 
+    while (cur < distance)
     {
-        cur = getOdometerDist();
+        cur = car.getDistance();
     }
     brake();
 }
 
 void driveBackward(int driveSpeed = -SPEED) // Manual backwards drive
 {
-    if (driveSpeed > 0) driveSpeed = -driveSpeed;
+    if (driveSpeed > 0)
+        driveSpeed = -driveSpeed;
     while (car.getSpeed() > driveSpeed) // Slowly decrease carspeed
     {
         car.setSpeed(car.getSpeed() - 10);
@@ -115,14 +155,15 @@ void driveBackward(int driveSpeed = -SPEED) // Manual backwards drive
 
 void driveBackwardDistance(int driveSpeed = -SPEED, unsigned int distance = 1)
 {
-    if (driveSpeed > 0) driveSpeed = -driveSpeed;
+    if (driveSpeed > 0)
+        driveSpeed = -driveSpeed;
     int cur = 0;
     leftOdometer.reset();
     rightOdometer.reset();
     driveBackward(driveSpeed);
-    while (cur > distance)
+    while (cur < distance)
     {
-        cur = getOdometerDist();
+        cur = car.getDistance();
     }
     brake();
 }
@@ -131,11 +172,6 @@ void brake() // Carstop
 {
     car.setSpeed(0);
     car.setAngle(0);
-}
-
-int getOdometerDist()
-{
-    return (leftOdometer.getDistance() + rightOdometer.getDistance()) / 2;
 }
 
 void checkDistance() // Obstacle interference
@@ -158,19 +194,19 @@ void checkDistance() // Obstacle interference
     }
 }
 
-void avoidObstacle() // Try finding a new path around obstacle
+void avoidObstacle()
 {
-    driveBackwardDistance(50);    
+    driveBackwardDistance(50);
     atObstacle = false;
-    turnRight();     // Turn 75 degrees right
-    checkDistance(); // Recheck if there's an obstacle in front, if not return false.
+    turnRightInPlace(90, 30); // Turn right 90 degrees
+    checkDistance();           // Recheck if there's an obstacle in front, if not return false.
     if (atObstacle)
     {
-        turnLeft(); // Turn 150 degrees to the left
-        turnLeft();
+        turnLeftInPlace(180, 30); // Turn 180 degrees to the left
+        atObstacle = false;
         checkDistance();
         if (atObstacle)
-            car.setAngle(75);
+            turnRightInPlace(90, 30); // Align to original position.
     }
 }
 
@@ -179,7 +215,9 @@ void driveWithAvoidance()
     if (atObstacle) // While you're at an obstacle
     {
         avoidObstacle();
-    } else {
+    }
+    else
+    {
         driveForward();
     }
     while (!atObstacle) // While you're not at an obstacle
@@ -242,5 +280,6 @@ void loop()
     readBluetooth();
     checkDistance(); // Checks distance in manual mode.
     gyro.update();
-    if (autoDriving) driveWithAvoidance();
+    if (autoDriving)
+        driveWithAvoidance();
 }
