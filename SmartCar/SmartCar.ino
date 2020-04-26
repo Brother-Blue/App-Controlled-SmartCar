@@ -19,7 +19,6 @@ unsigned int backDistance;
 
 // Boolean
 boolean atObstacle = false;
-boolean autoDriving = false;
 
 // Ultrasonic trigger pins
 const int TRIGGER_PIN = 5; // Trigger signal
@@ -199,7 +198,7 @@ void avoidObstacle()
     driveBackwardDistance(50);
     atObstacle = false;
     turnRightInPlace(90, 30); // Turn right 90 degrees
-    checkDistance();           // Recheck if there's an obstacle in front, if not return false.
+    checkDistance();          // Recheck if there's an obstacle in front, if not return false.
     if (atObstacle)
     {
         turnLeftInPlace(180, 30); // Turn 180 degrees to the left
@@ -226,16 +225,31 @@ void driveWithAvoidance()
     }
 }
 
-void handleInput(char input) // Handle serial input if there is any
+// Choose which way the car is controlled
+void carControl()
 {
-    if (input != 'a')
-        autoDriving = false;
+    char input = readBluetooth();
+
     switch (input)
     {
-    case 'a': // Automatic driving with obstacle avoidance
-        autoDriving = true;
+
+    case 'm':
+        manualControl();
+        break;
+
+    case 'a':
         driveWithAvoidance();
         break;
+    }
+}
+
+void manualControl()
+{
+
+    char input = readBluetooth();
+
+    switch (input)
+    {
 
     case 'l': // Left turn
         turnLeft();
@@ -253,11 +267,11 @@ void handleInput(char input) // Handle serial input if there is any
         driveBackward();
         break;
 
-    case 'i': // Increases carspeed by 10 m/s
+    case 'i': // Increases carspeed by 10%
         car.setSpeed(car.getSpeed() + 10);
         break;
 
-    case 'd': // Decreases carspeed by 10 m/s
+    case 'd': // Decreases carspeed by 10%
         car.setSpeed(car.getSpeed() - 10);
         break;
 
@@ -266,13 +280,16 @@ void handleInput(char input) // Handle serial input if there is any
     }
 }
 
-void readBluetooth()
+char readBluetooth()
 {
+    char input;
+
     while (bluetooth.available())
     {
-        char input = bluetooth.read();
-        handleInput(input);
+        input = bluetooth.read();
     }
+    
+    return input;
 }
 
 void loop()
@@ -280,6 +297,4 @@ void loop()
     readBluetooth();
     checkDistance(); // Checks distance in manual mode.
     gyro.update();
-    if (autoDriving)
-        driveWithAvoidance();
 }
