@@ -61,7 +61,8 @@ void setup()
     Serial.print("Ready to connect!");
 }
 
-void turnRight(unsigned int degrees = TURN_ANGLE, int turnSpeed = car.getSpeed()) // Manual right turn
+// Manual right turn
+void turnRight(unsigned int degrees = TURN_ANGLE, int turnSpeed = car.getSpeed())
 {
     if (turnSpeed == 0)
         turnSpeed = 10;
@@ -69,6 +70,7 @@ void turnRight(unsigned int degrees = TURN_ANGLE, int turnSpeed = car.getSpeed()
     car.setSpeed(turnSpeed);
 }
 
+// Auto right turn
 void turnRightInPlace(unsigned int degrees = TURN_ANGLE, unsigned int turnSpeed = car.getSpeed())
 {
     if (turnSpeed == 0)
@@ -88,16 +90,18 @@ void turnRightInPlace(unsigned int degrees = TURN_ANGLE, unsigned int turnSpeed 
     gyro.update();
 }
 
+// Manual left turn
 void turnLeft(int degrees = -TURN_ANGLE, int turnSpeed = car.getSpeed()) // Manual left turn
 {
     if (degrees > 0)
         degrees = -degrees;
     if (turnSpeed == 0)
-        turnSpeed = 10; //FIXME: Check how much car moves
+        turnSpeed = 10; //FIXME: Check how much car moves with speed 10
     car.setAngle(degrees);
     car.setSpeed(turnSpeed);
 }
 
+// Auto left turn
 void turnLeftInPlace(int degrees = -TURN_ANGLE, unsigned int turnSpeed = car.getSpeed())
 {
     if (turnSpeed == 0)
@@ -127,6 +131,7 @@ void driveForward(unsigned int driveSpeed = SPEED) // Manual forward drive
     car.setSpeed(driveSpeed);
 }
 
+// Not yet used
 void driveForwardDistance(unsigned int driveSpeed = SPEED, unsigned int distance = 1)
 {
     int cur = 0;
@@ -152,6 +157,7 @@ void driveBackward(int driveSpeed = -SPEED) // Manual backwards drive
     car.setSpeed(driveSpeed);
 }
 
+// Auto drive backwards
 void driveBackwardDistance(int driveSpeed = -SPEED, unsigned int distance = 1)
 {
     if (driveSpeed > 0)
@@ -167,13 +173,15 @@ void driveBackwardDistance(int driveSpeed = -SPEED, unsigned int distance = 1)
     brake();
 }
 
-void brake() // Carstop
+// Carstop
+void brake()
 {
     car.setSpeed(0);
     car.setAngle(0);
 }
 
-void checkDistance() // Obstacle interference
+// Obstacle interference
+void checkDistance()
 {
     frontDistance = (frontSensor.readRangeSingleMillimeters() / 10) - error; // Divided by 10 to convert to cm
     backDistance = back.getDistance();
@@ -181,7 +189,6 @@ void checkDistance() // Obstacle interference
     {
         Serial.print("VL53L0X sensor timeout occurred.");
     }
-
     if (frontDistance > 0 && frontDistance <= MIN_OBSTACLE)
     {
         atObstacle = true;
@@ -193,6 +200,7 @@ void checkDistance() // Obstacle interference
     }
 }
 
+// Tries to avoid obstacle
 void avoidObstacle()
 {
     driveBackwardDistance(50);
@@ -207,8 +215,10 @@ void avoidObstacle()
         if (atObstacle)
             turnRightInPlace(90, 30); // Align to original position.
     }
+    driveWithAvoidance();
 }
 
+// Drive until obstacle
 void driveWithAvoidance()
 {
     if (atObstacle) // While you're at an obstacle
@@ -232,7 +242,6 @@ void carControl()
 
     switch (input)
     {
-
     case 'm':
         manualControl();
         break;
@@ -243,14 +252,13 @@ void carControl()
     }
 }
 
+// Manual drive inputs
 void manualControl()
 {
-
     char input = readBluetooth();
 
     switch (input)
     {
-
     case 'l': // Left turn
         turnLeft();
         break;
@@ -280,6 +288,7 @@ void manualControl()
     }
 }
 
+// Bluetooth inputs
 char readBluetooth()
 {
     char input;
@@ -288,7 +297,6 @@ char readBluetooth()
     {
         input = bluetooth.read();
     }
-    
     return input;
 }
 
