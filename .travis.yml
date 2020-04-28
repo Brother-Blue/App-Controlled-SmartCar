@@ -8,7 +8,6 @@ matrix:
         - arduino --install-library "ESP32 AnalogWrite"
         - arduino --install-library "ServoESP32"
         - arduino --install-library "Smartcar shield"
-        - arduino --install-library "VL53L0X"
       script:
         - build_platform esp32
 
@@ -20,40 +19,25 @@ matrix:
         - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
       cache:
         directories:
-          - $HOME/.gradle/daemon       # Cache daemon logs
-          - $HOME/.gradle/native       # Cache library downloaded from the gradle dependency
-          - $HOME/.gradle/wrapper      # Cache the gradle
-          # Try to reuse previously downloaded Arduino resources
-          - $HOME/arduino_ide          # Cache Arduino IDE
-          - $HOME/.arduino15/packages/ # Cache Arduino IDE packages
+          - $HOME/.gradle/caches/
+          - $HOME/.gradle/wrapper/
+          - $HOME/.android/build-cache
       android:
         components:
         - tools
         - platform-tools
         - build-tools-29.0.3
-        - extra-android-m2repository
-        - extra-google-m2repositor
       # Emulator Management: Create, Start and Wait
       before_script:
-        # Launch Android emulator to run the instrumented tests
-          - android list targets
-          - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi armeabi-v7a # Create AVD for given api
-          - emulator -avd test -no-audio -no-window & # Start emulator
-          - android-wait-for-emulator
-          - adb devices # Display list of devices
-          - adb shell input keyevent 82 &
-          # Set `gradlew` as executable
-           chmod +x $TRAVIS_BUILD_DIR/App/gradlew
+        - android list targets
+        - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a -c 100M
+        - emulator -avd test -no-audio -no-window &
+        - android-wait-for-emulator
+        - adb shell input keyevent 82 &
 
       script:
         - cd $TRAVIS_BUILD_DIR/app
         - ./gradlew build
-        - ./gradlew build --stacktrace
-        # Run the Android app's unit tests
-        - ./gradlew test --info
-        - ./gradlew connectedCheck
-        # Run the Android app's instrumented tests
-        - ./gradlew connectedAndroidTest
 
 notifications:
   email:
