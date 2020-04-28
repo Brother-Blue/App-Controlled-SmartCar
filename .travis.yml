@@ -26,7 +26,7 @@ matrix:
         - tools
         - platform-tools
         - build-tools-28.0.3
-        - sys-img-armeabi-v7a-$android-22
+        - android-22
         - extra-android-m2repository
         - extra-google-m2repository
       before_script:
