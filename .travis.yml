@@ -26,6 +26,7 @@ matrix:
         - tools
         - platform-tools
         - build-tools-29.0.3
+        - android-29
         - android-22
         - sys-img-armeabi-v7a-android-22
         - extra-android-m2repository
@@ -38,7 +39,8 @@ matrix:
         - adb devices
         - adb shell input keyevent 82 &
         - chmod +x $TRAVIS_BUILD_DIR/app/gradlew
-
+      before_install:
+        - echo yes | sdkmanager "platforms;android-29"
       script:
         - cd $TRAVIS_BUILD_DIR/app
         - ./gradlew build
