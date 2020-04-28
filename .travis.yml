@@ -19,25 +19,28 @@ matrix:
         - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
       cache:
         directories:
-          - $HOME/.gradle/caches/
-          - $HOME/.gradle/wrapper/
-          - $HOME/.android/build-cache
+          - $HOME/.gradle/daemon
+          - $HOME/.gradle/native
+          - $HOME/.android/wrapper
       android:
         components:
         - tools
         - platform-tools
         - build-tools-29.0.3
-      # Emulator Management: Create, Start and Wait
       before_script:
         - android list targets
-        - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a -c 100M
+        - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
         - emulator -avd test -no-audio -no-window &
         - android-wait-for-emulator
+        - adb devices
         - adb shell input keyevent 82 &
+        - chmod +x $TRAVIS_BUILD_DIR/carMobileApp/gradlew
 
       script:
         - cd $TRAVIS_BUILD_DIR/app
         - ./gradlew build
+        - ./gradlew test
+        - ./gradlew connectedAndroidTest
 
 notifications:
   email:
