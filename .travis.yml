@@ -8,10 +8,12 @@ matrix:
         - arduino --install-library "ESP32 AnalogWrite"
         - arduino --install-library "ServoESP32"
         - arduino --install-library "Smartcar shield"
+        - arduino --install-library "VL53L0X"
       script:
         - build_platform esp32
 
     - language: android
+      dist: trusty
       jdk: oraclejdk9
       before_cache:
         - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
