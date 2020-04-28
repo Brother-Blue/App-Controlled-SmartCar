@@ -66,7 +66,7 @@ class ConnectActivity : AppCompatActivity() {
                     m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
                     // Creates a object representing the Bluethoot device with matching MAC Address
-                    val device: BluetoothDevice = m_bluetoothAdapter.getRemoteDevice(m_address)
+                    val device: BluetoothDevice = m_bluetoothAdapter!!.getRemoteDevice(m_address)
 
                     m_bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(m_myUUID)
                     //Stop looking for other devices to save battery
