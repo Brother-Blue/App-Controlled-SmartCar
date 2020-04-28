@@ -16,10 +16,10 @@ matrix:
       dist: trusty
       jdk: oraclejdk9
       before_cache:
-        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+        - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+        - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
       cache:
         directories:
-          # Cache all dirs under .gradle folder
           - $HOME/.gradle/daemon       # Cache daemon logs
           - $HOME/.gradle/native       # Cache library downloaded from the gradle dependency
           - $HOME/.gradle/wrapper      # Cache the gradle
@@ -28,13 +28,14 @@ matrix:
           - $HOME/.arduino15/packages/ # Cache Arduino IDE packages
       android:
         components:
-          - tools # to get the new `repository-11.xml`
-          - platform-tools
-          - build-tools-29.0.3
-          - extra-android-m2repository
-          - extra-google-m2repository
-        before_script:
-          # Launch Android emulator to run the instrumented tests
+        - tools
+        - platform-tools
+        - build-tools-29.0.3
+        - extra-android-m2repository
+        - extra-google-m2repositor
+      # Emulator Management: Create, Start and Wait
+      before_script:
+        # Launch Android emulator to run the instrumented tests
           - android list targets
           - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi armeabi-v7a # Create AVD for given api
           - emulator -avd test -no-audio -no-window & # Start emulator
@@ -42,22 +43,17 @@ matrix:
           - adb devices # Display list of devices
           - adb shell input keyevent 82 &
           # Set `gradlew` as executable
-           chmod +x $TRAVIS_BUILD_DIR/carMobileApp/gradlew
-        before_install:
-          # Install Android 9 SDK and accept its user agreement
-          - echo yes | sdkmanager "platforms;android-29"
-        install:
-          # Install Smartcar shield library (used by our sketch)
-          - arduino --install-library "Smartcar shield"
-        script:
-          # Build the Android app
-          - cd $TRAVIS_BUILD_DIR/carMobileApp
-          - ./gradlew build --stacktrace
-          # Run the Android app's unit tests
-          - ./gradlew test --info
-          - ./gradlew connectedCheck
-          # Run the Android app's instrumented tests
-          - ./gradlew connectedAndroidTest
+           chmod +x $TRAVIS_BUILD_DIR/App/gradlew
+
+      script:
+        - cd $TRAVIS_BUILD_DIR/app
+        - ./gradlew build
+        - ./gradlew build --stacktrace
+        # Run the Android app's unit tests
+        - ./gradlew test --info
+        - ./gradlew connectedCheck
+        # Run the Android app's instrumented tests
+        - ./gradlew connectedAndroidTest
 
 notifications:
   email:
