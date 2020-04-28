@@ -7,29 +7,22 @@
     android:orientation="vertical"
     android:gravity="center"
     android:layout_margin="20dp"
-    tools:context=".MainActivity">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="Medical Smart Car System"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context="com.example.app.MainActivity">
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:id="@+id/connect_to_car"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:onClick="connectCar"
-        android:text="Connect To Car"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        android:layout_marginStart="20dp"
+        android:text="@string/connect_to_car"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        tools:ignore="MissingConstraints">
+    </Button>
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

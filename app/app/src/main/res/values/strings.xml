@@ -1,8 +1,5 @@
 <resources>
-    <string name="app_name">app</string>
+    <string name="app_name">SmartCar</string>
+    <string name="connect_to_car">Connect to car</string>
 
-    <string name="refresh">Refresh</string>
-    <string name="on">On</string>
-    <string name="off">Off</string>
-    <string name="disconnect">Disconnect</string>
 </resources>
