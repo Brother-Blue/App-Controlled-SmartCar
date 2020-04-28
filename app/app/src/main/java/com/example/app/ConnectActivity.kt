@@ -26,8 +26,8 @@ class ConnectActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_connect)
-        //Get the car MAC-address that is set in MainActivity
-        m_address = intent.getStringExtra(MainActivity.CAR_ADDRESS)
+        //Set m_address to car's MAC-address
+        m_address = "FC:F5:C4:0F:87:62"
         ConnectToDevice(this).execute()
     }
 

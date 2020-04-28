@@ -14,10 +14,6 @@ class MainActivity : AppCompatActivity() {
     private var m_bluetoothAdapter: BluetoothAdapter? = null
     private val REQUEST_ENABLE_BLUETOOTH = 1
 
-    companion object {
-        const val CAR_ADDRESS: String = "FC:F5:C4:0F:87:62"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
