@@ -12,15 +12,7 @@ matrix:
         - build_platform esp32
 
     - language: android
-      jdk: oraclejdk8
-      # Set environment variables
-      env:
-        global:
-        # Set timeout for the Android emulator to come online
-        - ADB_INSTALL_TIMEOUT=10
-        # Set the minimum Android API to support
-        # Note: Not all of them work well with Travis
-        - ANDROID_TARGET=android-23
+      jdk: oraclejdk9
       before_cache:
         - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
       cache:
@@ -37,8 +29,6 @@ matrix:
           - tools # to get the new `repository-11.xml`
           - platform-tools
           - build-tools-29.0.3
-          - $ANDROID_TARGET # Our minimum Android version
-          - sys-img-armeabi-v7a-$ANDROID_TARGET
           - extra-android-m2repository
           - extra-google-m2repository
         before_script:
