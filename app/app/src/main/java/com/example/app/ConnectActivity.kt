@@ -9,6 +9,7 @@ import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import org.jetbrains.anko.toast
 import java.io.IOException
 import java.util.*
 
@@ -29,6 +30,11 @@ class ConnectActivity : AppCompatActivity() {
         //Set m_address to car's MAC-address
         m_address = "FC:F5:C4:0F:87:62"
         ConnectToDevice(this).execute()
+        if(m_isConnected){
+            toast("Connected to car")
+        } else {
+            toast("Not connected to car")
+        }
     }
 
     //Class in charge of connecting the device with the car
