@@ -15,9 +15,14 @@ import java.util.*
 
 class ConnectActivity : AppCompatActivity() {
 
-    companion object{
+    //IMPORTANT! The following code logic do not work at the moment! Unable to connect to remote BluetoothAdapter. 
+    //Need to improve the code to fix problem.!
+    
+    // Creates a companion object with values
+    companion object {
         var m_myUUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
         var m_bluetoothSocket: BluetoothSocket? = null
+        // creates a object that represent the Bluetoothadpater of the system. Can be null.
         //var m_progress: ProgressDialog? = null
         var m_bluetoothAdapter: BluetoothAdapter? = null
         var m_isConnected: Boolean = false
@@ -29,7 +34,9 @@ class ConnectActivity : AppCompatActivity() {
         setContentView(R.layout.activity_connect)
         //Set m_address to car's MAC-address
         m_address = "FC:F5:C4:0F:87:62"
+        // run the Connect to device method
         ConnectToDevice(this).execute()
+      
         if(m_isConnected){
             toast("Connected to car")
         } else {
@@ -57,10 +64,14 @@ class ConnectActivity : AppCompatActivity() {
             try {
                 if (m_bluetoothSocket == null || !m_isConnected){
                     m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-                    val device: BluetoothDevice = m_bluetoothAdapter!!.getRemoteDevice(m_address)
+
+                    // Creates a object representing the Bluethoot device with matching MAC Address
+                    val device: BluetoothDevice = m_bluetoothAdapter.getRemoteDevice(m_address)
+
                     m_bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(m_myUUID)
                     //Stop looking for other devices to save battery
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
+                    // Connect to the found Bluetoothsocket
                     m_bluetoothSocket!!.connect()
                 }
             } catch (e: IOException) {
@@ -69,7 +80,7 @@ class ConnectActivity : AppCompatActivity() {
             }
             return null
         }
-
+      
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             if(!connectSuccess){
