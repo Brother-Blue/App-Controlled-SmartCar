@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         when {
             mBluetoothAdapter == null -> { // Check to see if device support Bluetooth
-                toast("This device does not support Bluetooth.")
+                toast(getString(R.string.bluetooth_not_supported))
             }
 
             !mBluetoothAdapter.isEnabled -> { // Check if bluetooth is not enabled
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         } else if (mBluetoothAdapter?.isEnabled == true) {
             mBluetoothAdapter.disable()
             toggleConnectButton(false)
-            toast("Please enable bluetooth to continue using the application.")
+            toast(getString(R.string.bluetooth_connection_error))
         }
     }
 
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                     switch_bluetooth.isChecked = true
                 }
                 else -> {
-                    toast("Bluetooth is required for this application.")
+                    toast(getString(R.string.bluetooth_connection_error))
                     toggleConnectButton(false)
                     switch_bluetooth.isChecked = false
                 }
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     //Change view to the one when the car is connected
     private fun connectCar() {
         if (mBluetoothAdapter?.isEnabled == false) {
-            toast("Please turn on bluetooth to continue.")
+            toast(getString(R.string.bluetooth_connection_error))
             toggleConnectButton(false)
             switch_bluetooth.isChecked = false
         } else {

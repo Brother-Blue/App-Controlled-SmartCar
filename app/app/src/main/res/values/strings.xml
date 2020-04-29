@@ -5,5 +5,7 @@
     <string name="select">Select</string>
     <string name="help">Help</string>
     <string name="choose_car">Choose a Car to connect to:</string>
-
+    <string name="bluetooth_connection_error">Please enable bluetooth to continue.</string>
+    <string name="bluetooth_not_supported">Bluetooth is not supported on this device.</string>
+    
 </resources>
