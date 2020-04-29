@@ -7,8 +7,6 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
 
-
-
 class MainActivity : AppCompatActivity() {
 
     private val REQUEST_ENABLE_BLUETOOTH = 1
@@ -20,22 +18,22 @@ class MainActivity : AppCompatActivity() {
         toggleConnectButton(false)
         switch_bluetooth.isChecked = mBluetoothAdapter?.isEnabled == true
 
-        // Check to see if device support Bluetooth
+        when {
+            mBluetoothAdapter == null -> { // Check to see if device support Bluetooth
+                toast("This device does not support Bluetooth.")
+            }
 
-        if (mBluetoothAdapter == null) {
-            toast("This device does not support Bluetooth.")
+            !mBluetoothAdapter.isEnabled -> { // Check if bluetooth is not enabled
+                toggleBluetooth()
+            }
+
+            else -> { // Bluetooth is already on
+                toggleConnectButton(true)
+            }
         }
-        // Check to see if devices bluetooth is enabled. If not, prompt the user to enable it.
-        if (mBluetoothAdapter?.isEnabled == false) {
-            toggleBluetooth()
-        } else {
-            toggleConnectButton(true)
-        }
-        //When clicking on the connect button, call connectCar-function
-        connect_to_car.setOnClickListener{ connectCar()}
-        switch_bluetooth.setOnClickListener {
-            toggleBluetooth()
-        }
+
+        connect_to_car.setOnClickListener{ connectCar() }
+        switch_bluetooth.setOnClickListener { toggleBluetooth() }
     }
 
     private fun toggleBluetooth() {
@@ -47,7 +45,6 @@ class MainActivity : AppCompatActivity() {
             toggleConnectButton(false)
             toast("Please enable bluetooth to continue using the application.")
         }
-
     }
 
     private fun toggleConnectButton(value: Boolean) {
@@ -73,7 +70,13 @@ class MainActivity : AppCompatActivity() {
 
     //Change view to the one when the car is connected
     private fun connectCar() {
-        val intent = Intent(this, ConnectActivity::class.java)
-        startActivity(intent)
+        if (mBluetoothAdapter?.isEnabled == false) {
+            toast("Please turn on bluetooth to continue.")
+            toggleConnectButton(false)
+            switch_bluetooth.isChecked = false
+        } else {
+            val intent = Intent(this, ConnectActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
