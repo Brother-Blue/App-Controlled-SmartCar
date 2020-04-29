@@ -19,21 +19,23 @@ class MainActivity : AppCompatActivity() {
         switch_bluetooth.isChecked = mBluetoothAdapter?.isEnabled == true
 
         // Check to see if device support Bluetooth
-
         if (mBluetoothAdapter == null) {
             toast("This device does not support Bluetooth.")
         }
+
         // Check to see if devices bluetooth is enabled. If not, prompt the user to enable it.
         if (mBluetoothAdapter?.isEnabled == false) {
             toggleBluetooth()
         } else {
             toggleConnectButton(true)
         }
+
         //When clicking on the connect button, call connectCar-function
         connect_to_car.setOnClickListener{ connectCar() }
         switch_bluetooth.setOnClickListener { toggleBluetooth() }
     }
 
+    // Checks Bluetooth connectivity
     private fun toggleBluetooth() {
         if (mBluetoothAdapter?.isEnabled == false) {
             val enableBluetoothIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
@@ -45,10 +47,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Bluetooth switch
     private fun toggleConnectButton(value: Boolean) {
         connect_to_car.isEnabled = value
     }
 
+    // Depending on Bluetooth connection, change depending on outcome
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_ENABLE_BLUETOOTH) {
