@@ -15,9 +15,6 @@ import java.util.*
 
 class ConnectActivity : AppCompatActivity() {
 
-    //IMPORTANT! The following code logic do not work at the moment! Unable to connect to remote BluetoothAdapter. 
-    //Need to improve the code to fix problem.!
-    
     // Creates a companion object with values
     companion object {
         var m_myUUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
@@ -32,9 +29,9 @@ class ConnectActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_connect)
-        //Set m_address to car's MAC-address
+        // Set m_address to car's MAC-address
         m_address = "FC:F5:C4:0F:87:62"
-        // run the Connect to device method
+        // Run the Connect to device method
         ConnectToDevice(this).execute()
       
         if(m_isConnected){

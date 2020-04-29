@@ -13,11 +13,12 @@
         android:id="@+id/connect_to_car"
         android:layout_width="182dp"
         android:layout_height="81dp"
-        android:layout_marginStart="94dp"
         android:layout_marginBottom="272dp"
         android:text="@string/connect_to_car"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/help_button"
@@ -28,18 +29,19 @@
         android:text="@string/help"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="Help"/>
+        tools:text="Help" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="192dp"
         android:layout_height="51dp"
-        android:layout_marginStart="91dp"
         android:layout_marginTop="75dp"
         android:clickable="false"
         android:text="@string/smartcar_app"
         android:textColor="#000000"
         android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,6 +54,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/connect_to_car" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
