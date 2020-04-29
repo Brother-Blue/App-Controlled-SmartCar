@@ -1,11 +1,20 @@
 <resources>
     <string name="app_name">SmartCar</string>
-    <string name="connect_to_car">Connect to car</string>
+    <string name="drive_car">Control car</string>
     <string name="smartcar_app">SmartCar App</string>
     <string name="select">Select</string>
     <string name="help">Help</string>
-    <string name="choose_car">Choose a Car to connect to:</string>
+    <string name="control_the_car">Control Car Movement: </string>
+
     <string name="bluetooth_connection_error">Please enable bluetooth to continue.</string>
     <string name="bluetooth_not_supported">Bluetooth is not supported on this device.</string>
+    <string name="toggle_bluetooth">Toggle Bluetooth</string>
+
+    <string name="manual">Manual</string>
+    <string name="stop">STOP</string>
+    <string name="forward">Forward</string>
+    <string name="backward">Backward</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
     
 </resources>

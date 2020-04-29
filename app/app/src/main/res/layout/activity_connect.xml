@@ -7,22 +7,22 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="189dp"
-        android:layout_height="94dp"
+        android:layout_width="356dp"
+        android:layout_height="74dp"
         android:clickable="false"
-        android:text="@string/choose_car"
+        android:text="@string/control_the_car"
         android:textColor="#000000"
         android:textSize="30sp"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="111dp"
-        tools:layout_editor_absoluteY="61dp" />
+        tools:layout_editor_absoluteX="56dp"
+        tools:layout_editor_absoluteY="86dp" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="116dp"
         android:layout_height="63dp"
-        android:layout_marginStart="147dp"
-        android:layout_marginTop="597dp"
+        android:layout_marginStart="144dp"
+        android:layout_marginTop="620dp"
         android:text="@string/select"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,12 +31,12 @@
         android:id="@+id/toggleDriveMode"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
+        android:layout_marginStart="56dp"
         android:layout_marginTop="200dp"
         android:checked="false"
-        android:text="ToggleButton"
-        android:textOff="Manual"
-        android:textOn="Automatic"
+        android:text="@string/manual"
+        android:textOff="@string/manual"
+        android:textOn="@string/manual"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,9 +44,9 @@
         android:id="@+id/buttonForward"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="10dp"
-        android:text="FORWARD"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/forward"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggleDriveMode" />
 
@@ -54,9 +54,9 @@
         android:id="@+id/buttonBackward"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="10dp"
-        android:text="BACKWARD"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/backward"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonForward" />
 
@@ -64,9 +64,9 @@
         android:id="@+id/buttonLeft"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="10dp"
-        android:text="LEFT"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonBackward" />
 
@@ -74,9 +74,9 @@
         android:id="@+id/buttonRight"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="10dp"
-        android:text="RIGHT"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/right"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonLeft" />
 
@@ -84,9 +84,10 @@
         android:id="@+id/buttonStop"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
-        android:text="STOP"
+        android:layout_marginTop="364dp"
+        android:text="@string/stop"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.662"
         app:layout_constraintStart_toEndOf="@+id/buttonRight"
         app:layout_constraintTop_toTopOf="parent" />
 
