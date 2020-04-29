@@ -6,14 +6,15 @@
 BluetoothSerial bluetooth;
 
 // Constansts
-const int SPEED = 70;        // 70 m/s
-const int TURN_ANGLE = 75;   // 75 Degrees to turn
+const float SPEED = 1.0;        // 1 m/s speed
+const int TURN_ANGLE = 90;   // 90 Degrees to turn
 const int MIN_OBSTACLE = 20; // Minimum distance ahead to obstacle
 const int GYROSCOPE_OFFSET = 48;
 const unsigned int MAX_DISTANCE = 100; // Max distance to measure with ultrasonic
+const float SPEEDCHANGE = 0.2; // Used when increasing and decreasing speed. Might need a new more concrete name?
 
 // Unsigned
-unsigned int error = 0; //FIXME: Need to calculate error for LIDAR sensor readings.
+//unsigned int error = 0; //FIXME: VAFN ÄR DET HÄR OCH VARFÖR BEHÖVER VI DET?!?!
 unsigned int frontDistance;
 unsigned int backDistance;
 
@@ -30,7 +31,7 @@ VL53L0X frontSensor;                            // Micro LIDAR
 GY50 gyro(GYROSCOPE_OFFSET);                    // Gyroscope
 
 // Odometer
-const unsigned long PULSES_PER_METER = 600; // Amount of odometer pulses per 1 meter
+const unsigned long PULSES_PER_METER = 600; // TODO CALIBRATE PULSES ON CAR
 DirectionlessOdometer leftOdometer(
     smartcarlib::pins::v2::leftOdometerPin, []() { leftOdometer.update(); }, PULSES_PER_METER);
 DirectionlessOdometer rightOdometer(
@@ -46,6 +47,8 @@ SmartCar car(control, gyro, leftOdometer, rightOdometer);
 
 void setup()
 {
+    pinMode(LED_BUILTIN, OUTPUT);
+    car.enableCruiseControl(); // enabelCruiseControl example(2, 0.1, 0.5, 80) f f f l
     Serial.begin(9600);
     Wire.begin();
     frontSensor.setTimeout(500);
@@ -61,6 +64,7 @@ void setup()
     Serial.print("Ready to connect!");
 }
 
+/*
 // Manual right turn
 void turnRight(unsigned int degrees = TURN_ANGLE, int turnSpeed = car.getSpeed())
 {
@@ -69,7 +73,9 @@ void turnRight(unsigned int degrees = TURN_ANGLE, int turnSpeed = car.getSpeed()
     car.setAngle(degrees);
     car.setSpeed(turnSpeed);
 }
+*/
 
+/*
 // Auto right turn
 void turnRightInPlace(unsigned int degrees = TURN_ANGLE, unsigned int turnSpeed = car.getSpeed())
 {
@@ -89,7 +95,9 @@ void turnRightInPlace(unsigned int degrees = TURN_ANGLE, unsigned int turnSpeed 
     brake();
     gyro.update();
 }
+*/
 
+/*
 // Manual left turn
 void turnLeft(int degrees = -TURN_ANGLE, int turnSpeed = car.getSpeed()) // Manual left turn
 {
@@ -100,8 +108,9 @@ void turnLeft(int degrees = -TURN_ANGLE, int turnSpeed = car.getSpeed()) // Manu
     car.setAngle(degrees);
     car.setSpeed(turnSpeed);
 }
+*/
 
-// Auto left turn
+/* Auto left turn
 void turnLeftInPlace(int degrees = -TURN_ANGLE, unsigned int turnSpeed = car.getSpeed())
 {
     if (turnSpeed == 0)
@@ -120,17 +129,18 @@ void turnLeftInPlace(int degrees = -TURN_ANGLE, unsigned int turnSpeed = car.get
     brake();
     gyro.update();
 }
+*/
 
-void driveForward(unsigned int driveSpeed = SPEED) // Manual forward drive
+void driveForward() // Manual forward drive
 {
-    while (car.getSpeed() < driveSpeed) // Slowly increase carspeed
-    {
-        car.setSpeed(car.getSpeed() + 10);
-    }
     car.setAngle(0);
-    car.setSpeed(driveSpeed);
+    float currentSpeed = car.getSpeed();
+    while(currentSpeed < SPEED){
+        car.setSpeed(currentSpeed += SPEEDCHANGE);
+    }
 }
 
+/*
 // Not yet used
 void driveForwardDistance(unsigned int driveSpeed = SPEED, unsigned int distance = 1)
 {
@@ -144,19 +154,19 @@ void driveForwardDistance(unsigned int driveSpeed = SPEED, unsigned int distance
     }
     brake();
 }
+*/
 
-void driveBackward(int driveSpeed = -SPEED) // Manual backwards drive
+void driveBackward() // Manual backwards drive
 {
-    if (driveSpeed > 0)
-        driveSpeed = -driveSpeed;
-    while (car.getSpeed() > driveSpeed) // Slowly decrease carspeed
-    {
-        car.setSpeed(car.getSpeed() - 10);
-    }
     car.setAngle(0);
-    car.setSpeed(driveSpeed);
+    float currentSpeed = car.getSpeed();
+    while(currentSpeed > -SPEED){
+        car.setSpeed(currentSpeed -= SPEEDCHANGE);
+    }
 }
 
+
+/*
 // Auto drive backwards
 void driveBackwardDistance(int driveSpeed = -SPEED, unsigned int distance = 1)
 {
@@ -172,6 +182,7 @@ void driveBackwardDistance(int driveSpeed = -SPEED, unsigned int distance = 1)
     }
     brake();
 }
+*/
 
 // Carstop
 void brake()
@@ -180,10 +191,11 @@ void brake()
     car.setAngle(0);
 }
 
+
 // Obstacle interference
 void checkDistance()
 {
-    frontDistance = (frontSensor.readRangeSingleMillimeters() / 10) - error; // Divided by 10 to convert to cm
+    frontDistance = frontSensor.readRangeSingleMillimeters(); // Divided by 10 to convert to cm
     backDistance = back.getDistance();
     if (frontSensor.timeoutOccurred())
     {
@@ -200,6 +212,7 @@ void checkDistance()
     }
 }
 
+/*
 // Tries to avoid obstacle
 void avoidObstacle()
 {
@@ -217,7 +230,8 @@ void avoidObstacle()
     }
     driveWithAvoidance();
 }
-
+*/
+ /*
 // Drive until obstacle
 void driveWithAvoidance()
 {
@@ -234,37 +248,41 @@ void driveWithAvoidance()
         checkDistance();
     }
 }
+*/
 
+/*
 // Choose which way the car is controlled
 void carControl()
 {
+    Serial.print("m = manualControl, a = driveWithAvoidance");
     char input = readBluetooth();
 
     switch (input)
     {
     case 'm':
-        manualControl();
+        manualControl(input);
         break;
 
     case 'a':
-        driveWithAvoidance();
+        //driveWithAvoidance();
         break;
     }
 }
+*/
 
 // Manual drive inputs
-void manualControl()
+void manualControl(char input)
 {
-    char input = readBluetooth();
-
     switch (input)
     {
     case 'l': // Left turn
-        turnLeft();
+        car.setSpeed(SPEED);
+        car.setAngle(-TURN_ANGLE);
         break;
 
     case 'r': // Right turn
-        turnRight();
+        car.setSpeed(SPEED);
+        car.setAngle(TURN_ANGLE);
         break;
 
     case 'f': // Forward
@@ -275,12 +293,12 @@ void manualControl()
         driveBackward();
         break;
 
-    case 'i': // Increases carspeed by 10%
-        car.setSpeed(car.getSpeed() + 10);
+    case 'i': // Increases carspeed by 0.2
+        car.setSpeed(car.getSpeed() + SPEEDCHANGE);
         break;
 
-    case 'd': // Decreases carspeed by 10%
-        car.setSpeed(car.getSpeed() - 10);
+    case 'd': // Decreases carspeed by 0.2
+        car.setSpeed(car.getSpeed() - SPEEDCHANGE);
         break;
 
     default:
@@ -289,20 +307,17 @@ void manualControl()
 }
 
 // Bluetooth inputs
-char readBluetooth()
-{
-    char input;
-
-    while (bluetooth.available())
-    {
-        input = bluetooth.read();
+void readBluetooth(){
+  while(bluetooth.available()){
+        char msg = bluetooth.read();
+        manualControl(msg);
     }
-    return input;
 }
 
 void loop()
 {
     readBluetooth();
-    checkDistance(); // Checks distance in manual mode.
-    gyro.update();
+    car.update();
+    float curSpeed = car.getSpeed(); 
+    Serial.println(curSpeed);
 }
