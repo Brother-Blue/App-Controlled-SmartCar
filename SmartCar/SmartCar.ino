@@ -116,11 +116,16 @@ void driveForward() // Manual forward drive
 
 
 // Not yet used
-void driveForwardDistance(long distance)
+void driveDistance(long distance, int speed)
 {
     long initialDistance = car.getDistance();
     long travelledDistance = 0;
-    driveForward();
+
+    if(speed > 0){
+        driveForward();
+    } else {
+        driveBackward();
+    }
     
     while (travelledDistance <= distance)
     {
@@ -140,25 +145,6 @@ void driveBackward() // Manual backwards drive
         car.setSpeed(currentSpeed -= SPEEDCHANGE);
     }
 }
-
-
-/*
-// Auto drive backwards
-void driveBackwardDistance(int driveSpeed = -SPEED, unsigned int distance = 1)
-{
-    if (driveSpeed > 0)
-        driveSpeed = -driveSpeed;
-    int cur = 0;
-    leftOdometer.reset();
-    rightOdometer.reset();
-    driveBackward(driveSpeed);
-    while (cur < distance)
-    {
-        cur = car.getDistance();
-    }
-    brake();
-}
-*/
 
 // Carstop
 void stopCar()
@@ -217,6 +203,15 @@ void manualControl(char input)
     case 'd': // Decreases carspeed by 0.1
         car.setSpeed(car.getSpeed() - SPEEDCHANGE);
         break;
+
+    case 'c': // Drive forward a set distance
+        driveDistance(100, SPEED )
+        break;
+        
+    case 'p': // Drive backwards a set distance
+        driveDistance(100, -SPEED );
+        break;
+    
         
     default:
         stopCar();
