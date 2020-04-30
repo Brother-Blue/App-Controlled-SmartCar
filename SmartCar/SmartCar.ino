@@ -8,13 +8,15 @@ BluetoothSerial bluetooth;
 // Constansts
 const float SPEED = 1.0;        // 1 m/s speed
 const int TURN_ANGLE = 90;   // 90 Degrees to turn
-const int MIN_OBSTACLE = 20; // Minimum distance ahead to obstacle
+const int BACK_MIN_OBSTACLE = 20; // Minimum distance for SR04
+const int FRONT_MIN_OBSTACLE = 200; // Minimum distance for Micro-LIDAR
 const int GYROSCOPE_OFFSET = 48;
 const unsigned int MAX_DISTANCE = 100; // Max distance to measure with ultrasonic
 const float SPEEDCHANGE = 0.1; // Used when increasing and decreasing speed. Might need a new more concrete name?
 
 // Unsigned
-//unsigned int error = 0; //FIXME: VAFN ÄR DET HÄR OCH VARFÖR BEHÖVER VI DET?!?!
+unsigned int backSensorError = 3;
+unsigned int frontSensorError = 30; 
 unsigned int frontDistance;
 unsigned int backDistance;
 
@@ -26,8 +28,8 @@ const int TRIGGER_PIN = 5; // Trigger signal
 const int ECHO_PIN = 18;   // Reads signal
 
 // Sensor pins
-SR04 back(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // Ultrasonic
-VL53L0X frontSensor;                            // Micro LIDAR
+SR04 backSensor(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // Ultrasonic measures in centimeters
+VL53L0X frontSensor;                            // Micro LIDAR measures in millimeters
 GY50 gyro(GYROSCOPE_OFFSET);                    // Gyroscope
 
 // Odometer
@@ -155,21 +157,23 @@ void stopCar()
 
 
 // Obstacle interference
-void checkDistance()
+void stopAtObstacle()
 {
-    frontDistance = frontSensor.readRangeSingleMillimeters(); // Divided by 10 to convert to cm
-    backDistance = back.getDistance();
+    atObstacle = false;
+    frontDistance = (frontSensor.readRangeSingleMillimeters() - frontSensorError); // Divided by 10 to convert to cm
+    backDistance = (backSensor.getDistance() - backSensorError);
     if (frontSensor.timeoutOccurred())
     {
         Serial.print("VL53L0X sensor timeout occurred.");
     }
-    if (frontDistance > 0 && frontDistance <= MIN_OBSTACLE)
+    if (frontDistance > 0 && frontDistance <= FRONT_MIN_OBSTACLE)
     {
         atObstacle = true;
         stopCar();
     }
-    if (backDistance > 0 && backDistance <= MIN_OBSTACLE)
+    if (backDistance > 0 && backDistance <= BACK_MIN_OBSTACLE)
     {
+        atObstacle = true;
         stopCar();
     }
 }
@@ -205,7 +209,7 @@ void manualControl(char input)
         break;
 
     case 'c': // Drive forward a set distance
-        driveDistance(100, SPEED )
+        driveDistance(100, SPEED );
         break;
         
     case 'p': // Drive backwards a set distance
@@ -229,7 +233,6 @@ void readBluetooth(){
 void loop()
 {
     readBluetooth();
+    stopAtObstacle();
     car.update();
-    float curSpeed = car.getSpeed(); 
-    Serial.println(curSpeed);
 }
