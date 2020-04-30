@@ -11,6 +11,7 @@
     <string name="toggle_bluetooth">Toggle Bluetooth</string>
 
     <string name="manual">Manual</string>
+    <string name="automatic">Automatic</string>
     <string name="stop">STOP</string>
     <string name="forward">Forward</string>
     <string name="backward">Backward</string>

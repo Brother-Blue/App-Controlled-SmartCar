@@ -36,7 +36,7 @@
         android:checked="false"
         android:text="@string/manual"
         android:textOff="@string/manual"
-        android:textOn="@string/manual"
+        android:textOn="@string/automatic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

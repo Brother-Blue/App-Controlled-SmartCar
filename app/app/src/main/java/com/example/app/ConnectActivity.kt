@@ -9,12 +9,16 @@ import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import kotlinx.android.synthetic.main.activity_connect.*
 import org.jetbrains.anko.toast
 import java.io.IOException
 import java.util.*
 
 class ConnectActivity : AppCompatActivity() {
 
+    //IMPORTANT! The following code logic do not work at the moment! Unable to connect to remote BluetoothAdapter. 
+    //Need to improve the code to fix problem.!
+    
     // Creates a companion object with values
     companion object {
         var m_myUUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
@@ -29,9 +33,9 @@ class ConnectActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_connect)
-        // Set m_address to car's MAC-address
+        //Set m_address to car's MAC-address
         m_address = "FC:F5:C4:0F:87:62"
-        // Run the Connect to device method
+        // run the Connect to device method
         ConnectToDevice(this).execute()
       
         if(m_isConnected){
@@ -39,6 +43,40 @@ class ConnectActivity : AppCompatActivity() {
         } else {
             toast("Not connected to car")
         }
+
+        buttonForward.setOnClickListener { sendMessage("f") }
+        buttonBackward.setOnClickListener { sendMessage("b") }
+        buttonLeft.setOnClickListener { sendMessage("l") }
+        buttonRight.setOnClickListener { sendMessage("r") }
+        buttonStop.setOnClickListener { sendMessage("§") }
+        toggleDriveMode.setOnClickListener{
+            if (!toggleDriveMode.isChecked) {
+                toast("Automatic driving is WIP.")
+            }
+        }
+    }
+
+    private fun sendMessage(message: String) {
+        if (m_bluetoothSocket != null) {
+            try {
+                m_bluetoothSocket!!.outputStream.write(message.toByteArray())
+            } catch (e: IOException) {
+                Log.e("Send Message", "Error writing message")
+            }
+        }
+    }
+
+    private fun disconnect() {
+        if (m_bluetoothSocket != null) {
+            try {
+                m_bluetoothSocket!!.close()
+                m_bluetoothSocket = null
+                m_isConnected = false
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        finish()
     }
 
     //Class in charge of connecting the device with the car
