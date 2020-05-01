@@ -6,11 +6,11 @@
 BluetoothSerial bluetooth;
 
 // Constansts
-const float SPEED = 1.0;        // 1 m/s speed
+const float SPEED = 0.8;        // Speed in m/s 
 const int TURN_ANGLE = 90;   // 90 Degrees to turn
-const int BACK_MIN_OBSTACLE = 20; // Minimum distance for SR04
-const int FRONT_MIN_OBSTACLE = 200; // Minimum distance for Micro-LIDAR
-const int GYROSCOPE_OFFSET = 48;
+const int BACK_MIN_OBSTACLE = 30; // Minimum distance for SR04
+const int FRONT_MIN_OBSTACLE = 300; // Minimum distance for Micro-LIDAR
+const int GYROSCOPE_OFFSET = 13;
 const unsigned int MAX_DISTANCE = 100; // Max distance to measure with ultrasonic
 const float SPEEDCHANGE = 0.1; // Used when increasing and decreasing speed. Might need a new more concrete name?
 
@@ -22,6 +22,7 @@ unsigned int backDistance;
 
 // Boolean
 boolean atObstacle = false;
+boolean autoDrivingEnabled = false;
 
 // Ultrasonic trigger pins
 const int TRIGGER_PIN = 5; // Trigger signal
@@ -69,7 +70,7 @@ void setup()
 void rotate(int degrees, float speed)
 {
     car.update();
-    speed = smartcarlib::utils::getAbsolute(speed);
+    //speed = smartcarlib::utils::getAbsolute(speed);
     degrees %= 360; // Put degrees in a (-360,360) scale
    
     car.setSpeed(speed);
@@ -110,6 +111,7 @@ void rotate(int degrees, float speed)
 void driveForward() // Manual forward drive
 {
     car.setAngle(0);
+    car.update();
     float currentSpeed = car.getSpeed();
     while(currentSpeed < SPEED){
         car.setSpeed(currentSpeed += SPEEDCHANGE);
@@ -123,7 +125,8 @@ void driveDistance(long distance, int speed)
     long initialDistance = car.getDistance();
     long travelledDistance = 0;
 
-    if(speed > 0){
+    if(speed > 0)
+    {
         driveForward();
     } else {
         driveBackward();
@@ -142,8 +145,10 @@ void driveDistance(long distance, int speed)
 void driveBackward() // Manual backwards drive
 {
     car.setAngle(0);
+    car.update();
     float currentSpeed = car.getSpeed();
-    while(currentSpeed > -SPEED){
+    while(currentSpeed > -SPEED)
+    {
         car.setSpeed(currentSpeed -= SPEEDCHANGE);
     }
 }
@@ -160,7 +165,7 @@ void stopCar()
 void stopAtObstacle()
 {
     atObstacle = false;
-    frontDistance = (frontSensor.readRangeSingleMillimeters() - frontSensorError); // Divided by 10 to convert to cm
+    frontDistance = (frontSensor.readRangeSingleMillimeters() - frontSensorError);
     backDistance = (backSensor.getDistance() - backSensorError);
     if (frontSensor.timeoutOccurred())
     {
@@ -178,12 +183,74 @@ void stopAtObstacle()
     }
 }
 
+void findPath()
+{
+    boolean clearPathRight = true;
+    boolean clearPathLeft = true;
+    if(atObstacle)
+    {
+        rotate(TURN_ANGLE, SPEED);
+        car.update();
+        stopAtObstacle();
+        if(atObstacle)
+        {
+            rotate(-TURN_ANGLE, -SPEED);
+            Serial.println("inne i if(atobstacle) SVÄNG VÄNSTER");
+            rotate(-TURN_ANGLE, SPEED);
+            stopAtObstacle();
+            if(atObstacle)
+            {
+                clearPathLeft = false;
+            }
+            //car.update();
+        } 
+    }if(!clearPathRight && !clearPathLeft)
+    {
+        rotate(TURN_ANGLE, -SPEED); // turns back 90d, returning to original direction
+        driveDistance(20, -SPEED);
+    }
 
+
+    
+}
+
+void automatedDriving()
+{
+    while (autoDrivingEnabled)
+    {
+        driveForward();
+        stopAtObstacle();
+        if (atObstacle)
+        {
+            findPath();
+        }
+    }
+    
+}
+
+void driveOption(char input)
+{
+    switch(input)
+    {
+        case 'a':
+            autoDrivingEnabled = true;
+            break;
+
+        case 'm':
+            autoDrivingEnabled = false;
+            break;
+    }
+}
 // Manual drive inputs
 void manualControl(char input)
 {
     switch (input)
     {
+
+    case 'a':
+        automatedDriving();
+        break;
+
     case 'l': // Left turn
         rotate(-TURN_ANGLE, SPEED);
         break;
@@ -226,13 +293,25 @@ void manualControl(char input)
 void readBluetooth(){
   while(bluetooth.available()){
         char msg = bluetooth.read();
+        driveOption(msg);
         manualControl(msg);
     }
 }
 
 void loop()
 {
+    
+    rotate(TURN_ANGLE, -SPEED);
+    
+    //autoDrivingEnabled = true;
+    //automatedDriving();
+    /*
     readBluetooth();
-    stopAtObstacle();
     car.update();
+
+    if(autoDrivingEnabled)
+    {
+        automatedDriving();
+    }*/
+
 }
