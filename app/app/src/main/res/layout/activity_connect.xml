@@ -18,14 +18,15 @@
         tools:layout_editor_absoluteY="86dp" />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="116dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="144dp"
-        android:layout_marginTop="620dp"
-        android:text="@string/select"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/buttonExit"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:text="@string/exit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.536"
+        app:layout_constraintStart_toEndOf="@+id/buttonRight" />
 
     <ToggleButton
         android:id="@+id/toggleDriveMode"
@@ -33,7 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="56dp"
         android:layout_marginTop="200dp"
-        android:checked="false"
         android:text="@string/manual"
         android:textOff="@string/manual"
         android:textOn="@string/automatic"

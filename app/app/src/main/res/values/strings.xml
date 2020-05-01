@@ -2,7 +2,7 @@
     <string name="app_name">SmartCar</string>
     <string name="drive_car">Control car</string>
     <string name="smartcar_app">SmartCar App</string>
-    <string name="select">Select</string>
+    <string name="exit">Exit</string>
     <string name="help">Help</string>
     <string name="control_the_car">Control Car Movement: </string>
 

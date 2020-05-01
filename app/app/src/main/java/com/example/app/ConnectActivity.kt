@@ -1,6 +1,5 @@
 package com.example.app
 
-//import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
@@ -14,17 +13,14 @@ import org.jetbrains.anko.toast
 import java.io.IOException
 import java.util.*
 
+private const val TAG = "Group 2 - Debug:"
+
 class ConnectActivity : AppCompatActivity() {
 
-    //IMPORTANT! The following code logic do not work at the moment! Unable to connect to remote BluetoothAdapter. 
-    //Need to improve the code to fix problem.!
-    
     // Creates a companion object with values
     companion object {
         var m_myUUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
         var m_bluetoothSocket: BluetoothSocket? = null
-        // creates a object that represent the Bluetoothadpater of the system. Can be null.
-        //var m_progress: ProgressDialog? = null
         var m_bluetoothAdapter: BluetoothAdapter? = null
         var m_isConnected: Boolean = false
         var m_address: String? = null
@@ -33,9 +29,9 @@ class ConnectActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_connect)
-        //Set m_address to car's MAC-address
+        // Set m_address to the car's MAC-address
         m_address = "FC:F5:C4:0F:87:62"
-        // run the Connect to device method
+        // Run the ConnectToDevice method
         ConnectToDevice(this).execute()
       
         if(m_isConnected){
@@ -49,8 +45,9 @@ class ConnectActivity : AppCompatActivity() {
         buttonLeft.setOnClickListener { sendMessage("l") }
         buttonRight.setOnClickListener { sendMessage("r") }
         buttonStop.setOnClickListener { sendMessage("§") }
+        buttonExit.setOnClickListener { disconnect() }
         toggleDriveMode.setOnClickListener{
-            if (!toggleDriveMode.isChecked) {
+            if (toggleDriveMode.isChecked) {
                 toast("Automatic driving is WIP.")
             }
         }
@@ -61,7 +58,7 @@ class ConnectActivity : AppCompatActivity() {
             try {
                 m_bluetoothSocket!!.outputStream.write(message.toByteArray())
             } catch (e: IOException) {
-                Log.e("Send Message", "Error writing message")
+                Log.e(TAG, "Error writing message")
             }
         }
     }
@@ -83,16 +80,10 @@ class ConnectActivity : AppCompatActivity() {
     private class ConnectToDevice(c: Context) : AsyncTask<Void, Void, String>(){
 
         private var connectSuccess: Boolean = true
-        private val context: Context
-
-        //Constructor
-        init {
-            this.context = c
-        }
+        private val context: Context = c
 
         override fun onPreExecute() {
             super.onPreExecute()
-            //m_progress = ProgressDialog.show(context, "Connecting...", "please wait")
         }
         //Connect device to car
         override fun doInBackground(vararg params: Void?): String? {
@@ -100,13 +91,13 @@ class ConnectActivity : AppCompatActivity() {
                 if (m_bluetoothSocket == null || !m_isConnected){
                     m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
-                    // Creates a object representing the Bluethoot device with matching MAC Address
+                    // Creates a object representing the Bluetooth device with matching MAC Address
                     val device: BluetoothDevice = m_bluetoothAdapter!!.getRemoteDevice(m_address)
 
                     m_bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(m_myUUID)
-                    //Stop looking for other devices to save battery
+                    // Stop looking for other devices to save battery
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
-                    // Connect to the found Bluetoothsocket
+                    // Connect to the found Bluetooth socket
                     m_bluetoothSocket!!.connect()
                 }
             } catch (e: IOException) {
@@ -119,12 +110,10 @@ class ConnectActivity : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             if(!connectSuccess){
-                Log.i("data", "could not connect")
+                Log.i(TAG, "could not connect")
             } else {
                 m_isConnected = true
             }
-            //m_progress?.dismiss()
-
         }
     }
 }
