@@ -2,8 +2,12 @@
 #include <BluetoothSerial.h>
 #include <Wire.h>
 #include <VL53L0X.h>
+#include <WebServer.h>
+#include <WiFi.h>
+#include <ESPmDNS.h>
 
 BluetoothSerial bluetooth;
+WebServer server(80);
 
 // Constansts
 const float SPEED = 0.7;        // Speed in m/s 
@@ -13,6 +17,10 @@ const int FRONT_MIN_OBSTACLE = 300; // Minimum distance for Micro-LIDAR
 const int GYROSCOPE_OFFSET = 13;
 const unsigned int MAX_DISTANCE = 100; // Max distance to measure with ultrasonic
 const float SPEEDCHANGE = 0.1; // Used when increasing and decreasing speed. Might need a new more concrete name?
+const auto ssid = "yourSSID";
+const auto password = "yourWifiPassword";
+
+
 
 // Unsigned
 unsigned int backSensorError = 3;
@@ -21,7 +29,8 @@ unsigned int frontDistance;
 unsigned int backDistance;
 
 // Boolean
-boolean atObstacle = false;
+boolean atObstacleFront = false;
+boolean atObstacleBack = false;
 boolean autoDrivingEnabled = false;
 
 // Ultrasonic trigger pins
@@ -52,7 +61,7 @@ void setup()
 {
     pinMode(LED_BUILTIN, OUTPUT);
     car.enableCruiseControl(); // enabelCruiseControl example(2, 0.1, 0.5, 80) f f f l
-    Serial.begin(9600);
+    Serial.begin(115200);
     Wire.begin();
     frontSensor.setTimeout(500);
     if (!frontSensor.init())
@@ -64,15 +73,43 @@ void setup()
     }
     frontSensor.startContinuous(100);
     bluetooth.begin("Group 2 SmartCar");
-    Serial.print("Ready to connect!");
+    //----------------------- wifi setup 
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+    Serial.println("");
+
+    // Wait for connection
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        delay(500);
+        Serial.print(".");
+    }
+    Serial.println("");
+    Serial.print("Connected to ");
+    Serial.println(ssid);
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+
+    if (MDNS.begin("smartcar"))
+    {
+        Serial.println("MDNS responder started");
+    }
+
+    server.onNotFound(
+        []() { server.send(404, "text/plain", "Unknown command"); });
+
+    server.begin();
+    Serial.println("HTTP server started");
 }
 
 void rotate(int degrees, float speed)
 {
-    //speed = smartcarlib::utils::getAbsolute(speed);
+    
     degrees %= 360; // Put degrees in a (-360,360) scale
    
+   
     car.setSpeed(speed);
+    //Checks if we are driving backward or forward and sets angle accordingly
     if(speed < 0)
     {
         if(degrees > 0)
@@ -104,21 +141,15 @@ void rotate(int degrees, float speed)
         auto currentHeading = car.getHeading();
         if (degrees < 0 && currentHeading > initialHeading)
         {
-            // If we are turning left and the current heading is larger than the
-            // initial one (e.g. started at 10 degrees and now we are at 350), we need to substract
-            // 360 so to eventually get a signed displacement from the initial heading (-20)
+            // Turning while current heading is bigger than the initial one
             currentHeading -= 360;
         }
         else if (degrees > 0 && currentHeading < initialHeading)
         {
-            // If we are turning right and the heading is smaller than the
-            // initial one (e.g. started at 350 degrees and now we are at 20), so to get a signed
-            // displacement (+30)
+            // Turning while current heading is smaller than the initial one
             currentHeading += 360;
         }
-        // Degrees turned so far is initial heading minus current (initial heading
-        // is at least 0 and at most 360. To handle the "edge" cases we substracted or added 360 to
-        // currentHeading)
+       
         int degreesTurnedSoFar  = initialHeading - currentHeading;
         hasReachedTargetDegrees = smartcarlib::utils::getAbsolute(degreesTurnedSoFar) >= smartcarlib::utils::getAbsolute(degrees); 
     }
@@ -304,9 +335,10 @@ void loop()
     //automatedDriving();
     
     readBluetooth();
+    server.handleClient();
     car.update();
     
-    
+
     /*
     if(autoDrivingEnabled)
     {
