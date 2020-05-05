@@ -11,6 +11,7 @@
         android:layout_width="356dp"
         android:layout_height="74dp"
         android:clickable="false"
+        android:fontFamily="sans-serif-medium"
         android:text="@string/control_the_car"
         android:textColor="#000000"
         android:textSize="30sp"
