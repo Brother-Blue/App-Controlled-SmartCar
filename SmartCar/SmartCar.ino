@@ -6,8 +6,8 @@
 BluetoothSerial bluetooth;
 
 // Constansts
-const float SPEED = 0.8;        // Speed in m/s 
-const int TURN_ANGLE = 90;   // 90 Degrees to turn
+const float SPEED = 0.7;        // Speed in m/s 
+const int TURN_ANGLE = 90;   // 90 Degrees to turn forward
 const int BACK_MIN_OBSTACLE = 30; // Minimum distance for SR04
 const int FRONT_MIN_OBSTACLE = 300; // Minimum distance for Micro-LIDAR
 const int GYROSCOPE_OFFSET = 13;
@@ -69,12 +69,32 @@ void setup()
 
 void rotate(int degrees, float speed)
 {
-    car.update();
     //speed = smartcarlib::utils::getAbsolute(speed);
     degrees %= 360; // Put degrees in a (-360,360) scale
    
     car.setSpeed(speed);
-    car.setAngle(degrees);
+    if(speed < 0)
+    {
+        if(degrees > 0)
+        {
+            car.setAngle(-TURN_ANGLE);
+        } 
+        else 
+        {
+            car.setAngle(TURN_ANGLE);
+        }
+        
+    } else {
+        if(degrees > 0)
+        {
+            car.setAngle(TURN_ANGLE);
+        } 
+        else 
+        {
+            car.setAngle(-TURN_ANGLE);
+        
+        }
+    }
 
     const auto initialHeading    = car.getHeading();
     bool hasReachedTargetDegrees = false;
@@ -100,10 +120,8 @@ void rotate(int degrees, float speed)
         // is at least 0 and at most 360. To handle the "edge" cases we substracted or added 360 to
         // currentHeading)
         int degreesTurnedSoFar  = initialHeading - currentHeading;
-        hasReachedTargetDegrees = smartcarlib::utils::getAbsolute(degreesTurnedSoFar)
-                                  >= smartcarlib::utils::getAbsolute(degrees);
+        hasReachedTargetDegrees = smartcarlib::utils::getAbsolute(degreesTurnedSoFar) >= smartcarlib::utils::getAbsolute(degrees); 
     }
-
     car.setSpeed(0);
 }
 
@@ -185,33 +203,6 @@ void stopAtObstacle()
 
 void findPath()
 {
-    boolean clearPathRight = true;
-    boolean clearPathLeft = true;
-    if(atObstacle)
-    {
-        rotate(TURN_ANGLE, SPEED);
-        car.update();
-        stopAtObstacle();
-        if(atObstacle)
-        {
-            rotate(-TURN_ANGLE, -SPEED);
-            Serial.println("inne i if(atobstacle) SVÄNG VÄNSTER");
-            rotate(-TURN_ANGLE, SPEED);
-            stopAtObstacle();
-            if(atObstacle)
-            {
-                clearPathLeft = false;
-            }
-            //car.update();
-        } 
-    }if(!clearPathRight && !clearPathLeft)
-    {
-        rotate(TURN_ANGLE, -SPEED); // turns back 90d, returning to original direction
-        driveDistance(20, -SPEED);
-    }
-
-
-    
 }
 
 void automatedDriving()
@@ -259,6 +250,14 @@ void manualControl(char input)
         rotate(TURN_ANGLE, SPEED);
         break;
 
+    case 'k':
+        rotate(TURN_ANGLE, -SPEED); // left backwards turn
+        break;
+    
+    case 'j':
+        rotate(-TURN_ANGLE, -SPEED); // right backwards turn
+        break;
+
     case 'f': // Forward
         driveForward();
         break;
@@ -293,7 +292,7 @@ void manualControl(char input)
 void readBluetooth(){
   while(bluetooth.available()){
         char msg = bluetooth.read();
-        driveOption(msg);
+        //driveOption(msg);
         manualControl(msg);
     }
 }
@@ -301,14 +300,13 @@ void readBluetooth(){
 void loop()
 {
     
-    rotate(TURN_ANGLE, -SPEED);
-    
     //autoDrivingEnabled = true;
     //automatedDriving();
-    /*
+    
     readBluetooth();
     car.update();
-
+    
+    /*
     if(autoDrivingEnabled)
     {
         automatedDriving();
