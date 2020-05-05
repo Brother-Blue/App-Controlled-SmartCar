@@ -7,7 +7,8 @@
     android:layout_margin="20dp"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.example.app.MainActivity">
+    tools:context="com.example.app.MainActivity"
+    android:background="@drawable/main_gradient">
 
     <Button
         android:id="@+id/connect_to_car"
@@ -35,13 +36,13 @@
         android:id="@+id/textView"
         android:layout_width="192dp"
         android:layout_height="51dp"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="108dp"
         android:clickable="false"
         android:text="@string/smartcar_app"
         android:textColor="#000000"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.53"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,10 +50,20 @@
         android:id="@+id/switch-bluetooth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="32dp"
         android:text="@string/toggle_bluetooth"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/connect_to_car" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="114dp"
+        android:layout_height="99dp"
+        android:layout_margin="32dp"
+        android:background="@drawable/ic_airport_shuttle_24px"
+        tools:layout_editor_absoluteX="128dp"
+        tools:layout_editor_absoluteY="171dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

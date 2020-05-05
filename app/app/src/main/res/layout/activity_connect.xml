@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/main_gradient">
 
     <TextView
         android:id="@+id/textView3"
@@ -15,25 +16,25 @@
         android:textSize="30sp"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="56dp"
-        tools:layout_editor_absoluteY="86dp" />
+        tools:layout_editor_absoluteY="76dp" />
 
     <Button
         android:id="@+id/buttonExit"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="392dp"
         android:text="@string/exit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.536"
+        app:layout_constraintHorizontal_bias="0.311"
         app:layout_constraintStart_toEndOf="@+id/buttonRight" />
 
     <ToggleButton
         android:id="@+id/toggleDriveMode"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="180dp"
         android:text="@string/manual"
         android:textOff="@string/manual"
         android:textOn="@string/automatic"
@@ -44,28 +45,24 @@
         android:id="@+id/buttonForward"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="40dp"
         android:text="@string/forward"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toggleDriveMode" />
+        tools:layout_editor_absoluteX="166dp"
+        tools:layout_editor_absoluteY="180dp" />
 
     <Button
         android:id="@+id/buttonBackward"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="28dp"
         android:text="@string/backward"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonForward" />
+        tools:layout_editor_absoluteX="280dp"
+        tools:layout_editor_absoluteY="180dp" />
 
     <Button
         android:id="@+id/buttonLeft"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
         android:text="@string/left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonBackward" />
@@ -74,21 +71,82 @@
         android:id="@+id/buttonRight"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="32dp"
         android:text="@string/right"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLeft" />
+        tools:layout_editor_absoluteX="166dp"
+        tools:layout_editor_absoluteY="240dp" />
 
     <Button
         android:id="@+id/buttonStop"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="364dp"
+        android:layout_marginTop="240dp"
         android:text="@string/stop"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.662"
+        app:layout_constraintHorizontal_bias="0.311"
         app:layout_constraintStart_toEndOf="@+id/buttonRight"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/new_buttonBackward"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="96dp"
+        android:layout_height="88dp"
+        android:background="@drawable/ic_arrow_downward_24px"
+        tools:layout_editor_absoluteX="160dp"
+        tools:layout_editor_absoluteY="493dp" />
+
+    <Button
+        android:id="@+id/new_buttonForward"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="96dp"
+        android:layout_height="88dp"
+        android:background="@drawable/ic_arrow_upward_24px"
+        tools:layout_editor_absoluteX="160dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <Button
+        android:id="@+id/new_buttonLeft"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="96dp"
+        android:layout_height="88dp"
+        android:background="@drawable/ic_arrow_back_24px"
+        tools:layout_editor_absoluteX="56dp"
+        tools:layout_editor_absoluteY="398dp" />
+
+    <Button
+        android:id="@+id/new_buttonRight"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="96dp"
+        android:layout_height="88dp"
+        android:background="@drawable/ic_arrow_forward_24px"
+        tools:layout_editor_absoluteX="266dp"
+        tools:layout_editor_absoluteY="398dp" />
+
+    <Button
+        android:id="@+id/new_buttonExit"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="48dp"
+        android:layout_height="47dp"
+        android:background="@drawable/ic_cancel_24px"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <Button
+        android:id="@+id/new_buttonStop"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="64dp"
+        android:layout_height="60dp"
+        android:background="@drawable/ic_pan_tool_24px"
+        tools:layout_editor_absoluteX="308dp"
+        tools:layout_editor_absoluteY="616dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="48dp"
+        android:layout_height="22dp"
+        android:text="@string/stop"
+        android:textSize="18sp"
+        tools:layout_editor_absoluteX="324dp"
+        tools:layout_editor_absoluteY="684dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
