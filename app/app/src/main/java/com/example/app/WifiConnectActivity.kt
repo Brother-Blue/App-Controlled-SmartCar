@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_wificonnect.*
 import org.jetbrains.anko.toast
 import java.io.IOException
@@ -11,7 +12,7 @@ import java.util.*
 
 private const val TAG = "Group 2 - Debug:"
 
-class WifiConnectActivity {
+class WifiConnectActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,5 +32,4 @@ class WifiConnectActivity {
         }
          */
     }
-    
 }
