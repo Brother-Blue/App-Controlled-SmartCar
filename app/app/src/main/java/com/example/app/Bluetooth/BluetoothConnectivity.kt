@@ -1,5 +1,5 @@
-package com.example.app
-
+package com.example.app.Bluetooth
+/*
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
@@ -117,3 +117,5 @@ class ConnectActivity : AppCompatActivity() {
         }
     }
 }
+
+ */
