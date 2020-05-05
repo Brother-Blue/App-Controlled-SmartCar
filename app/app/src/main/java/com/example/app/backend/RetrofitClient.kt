@@ -1,7 +1,7 @@
 package com.example.app.backend
 
-import Endpoint
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
     private const val URL = "smartcar.local/"
