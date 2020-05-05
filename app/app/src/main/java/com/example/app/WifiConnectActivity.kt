@@ -15,7 +15,7 @@ import java.util.*
 
 private const val TAG = "Group 2 - Debug:"
 
-class ConnectActivity : AppCompatActivity() {
+class WifiConnectActivity : AppCompatActivity() {
 
     // Creates a companion object with values
     companion object {

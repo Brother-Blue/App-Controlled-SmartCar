@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             toggleConnectButton(false)
             switch_bluetooth.isChecked = false
         } else {
-            val intent = Intent(this, ConnectActivity::class.java)
+            val intent = Intent(this, WifiConnectActivity::class.java)
             startActivity(intent)
         }
     }
