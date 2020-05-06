@@ -3,3 +3,5 @@
 .clang_complete
 .gcc-flags.json
 .idea/
+build
+cmake-build-debug
