@@ -37,8 +37,7 @@ jobs:
       CC: ${{ matrix.compiler.cc }}
       CXX: ${{ matrix.compiler.cxx }}
       build_dir: SmartCar/build
-
-   steps:
+    steps:
       - uses: actions/checkout@v2
       - name: Get dependencies
         run: |
