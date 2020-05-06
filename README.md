@@ -1,4 +1,4 @@
-# group-02 ![Group 2 Android CI] ![Group 2 Arduino CI]
+# group-02 ![Arduino](https://github.com/DIT112-V20/group-02/workflows/Group%202%20Arduino%20CI/badge.svg)![Android](https://github.com/DIT112-V20/group-02/workflows/Group%202%20Android%20CI/badge.svg)
 
 ## What are you going to make?
 
@@ -32,6 +32,3 @@ With the provided arduino car, included hardware, and external devices that comm
 - Hugo Hempel
 - Linus Ivarsson
 - Linus Åberg
-
-[Group 2 Android CI]: https://github.com/DIT112-V20/group-06/workflows/Android%20CI/badge.svg
-[Group 2 Arduino CI]: https://github.com/DIT112-V20/group-06/workflows/Arduino%20CI/badge.svg
