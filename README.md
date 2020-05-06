@@ -1,4 +1,4 @@
-# group-02 [![Build Status](https://travis-ci.com/DIT112-V20/group-02.svg?branch=master)](https://travis-ci.com/DIT112-V20/group-02)
+# group-02 ![Group 2 Android CI] ![Group 2 Arduino CI]
 
 ## What are you going to make?
 
@@ -19,7 +19,10 @@ With the provided arduino car, included hardware, and external devices that comm
 
 ## Software:
 
+- [SmartCar Library](https://www.arduinolibraries.info/libraries/smartcar-shield)
 - [Arduino IDE](https://www.arduino.cc/)
+- [VS Code](https://code.visualstudio.com/)
+- [Android Studio](https://developer.android.com/studio)
 
 ## Developers:
 
@@ -29,3 +32,6 @@ With the provided arduino car, included hardware, and external devices that comm
 - Hugo Hempel
 - Linus Ivarsson
 - Linus Åberg
+
+[Group 2 Android CI]: https://github.com/DIT112-V20/group-06/workflows/Android%20CI/badge.svg
+[Group 2 Arduino CI]: https://github.com/DIT112-V20/group-06/workflows/Arduino%20CI/badge.svg
