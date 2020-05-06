@@ -26,28 +26,28 @@ jobs:
       - name: Build sketch
         run: |
           arduino-cli compile -b esp32:esp32:esp32doit-devkit-v1 SmartCar/SmartCar.ino
-  run-unit-tests:
-    runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        compiler:
-          - cc: gcc-9
-            cxx: g++-9
-    env:
-      CC: ${{ matrix.compiler.cc }}
-      CXX: ${{ matrix.compiler.cxx }}
-      build_dir: SmartCar/build
-    steps:
-      - uses: actions/checkout@v2
-      - name: Get dependencies
-        run: |
-          sudo apt-get install -y ${{ matrix.compiler.cc }}
-          sudo apt-get install -y ${{ matrix.compiler.cxx }}
-      - name: Create unit test build directory
-        run: mkdir -p ${build_dir}
-      - name: Configure unit tests
-        run: cd ${build_dir} && cmake ..
-      - name: Build unit tests
-        run: cmake --build ${build_dir} -- -j$(nproc)
-      - name: Run unit tests
-        run: cd ${build_dir}/test && ctest
+  # run-unit-tests:
+  #   runs-on: ubuntu-18.04
+  #   strategy:
+  #     matrix:
+  #       compiler:
+  #         - cc: gcc-9
+  #           cxx: g++-9
+  #   env:
+  #     CC: ${{ matrix.compiler.cc }}
+  #     CXX: ${{ matrix.compiler.cxx }}
+  #     build_dir: SmartCar/build
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Get dependencies
+  #       run: |
+  #         sudo apt-get install -y ${{ matrix.compiler.cc }}
+  #         sudo apt-get install -y ${{ matrix.compiler.cxx }}
+  #     - name: Create unit test build directory
+  #       run: mkdir -p ${build_dir}
+  #     - name: Configure unit tests
+  #       run: cd ${build_dir} && cmake ..
+  #     - name: Build unit tests
+  #       run: cmake --build ${build_dir} -- -j$(nproc)
+  #     - name: Run unit tests
+  #       run: cd ${build_dir}/test && ctest
