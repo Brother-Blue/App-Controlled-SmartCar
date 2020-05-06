@@ -1,0 +1,53 @@
+name: Group 2 Arduino CI
+
+on: [push, pull_request]
+
+jobs:
+  build-sketch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repo
+        uses: actions/checkout@v2
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v1.0.0
+      - name: Get Python3
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+      - name: Fetch sketch dependencies
+        run: |
+          pip3 install pyserial
+          arduino-cli core update-index --additional-urls "https://dl.espressif.com/dl/package_esp32_index.json"
+          arduino-cli core install esp32:esp32 --additional-urls "https://dl.espressif.com/dl/package_esp32_index.json"
+          arduino-cli lib install "Smartcar shield"
+      - name: Build sketch
+        run: |
+          arduino-cli compile -b esp32:esp32:esp32doit-devkit-v1 arduino/SmartcarWebserver/SmartcarWebserver.ino
+          arduino-cli compile -b esp32:esp32:esp32doit-devkit-v1 arduino/SmartcarWebserverWithClass/SmartcarWebserverWithClass.ino
+          arduino-cli compile -b esp32:esp32:esp32doit-devkit-v1 arduino/SmartcarWebserverTestable/SmartcarWebserverTestable.ino
+  run-unit-tests:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        compiler:
+          - cc: gcc-9
+            cxx: g++-9
+    env:
+      CC: ${{ matrix.compiler.cc }}
+      CXX: ${{ matrix.compiler.cxx }}
+      build_dir: arduino/build
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get dependencies
+        run: |
+          sudo apt-get install -y ${{ matrix.compiler.cc }}
+          sudo apt-get install -y ${{ matrix.compiler.cxx }}
+      - name: Create unit test build directory
+        run: mkdir -p ${build_dir}
+      - name: Configure unit tests
+        run: cd ${build_dir} && cmake ..
+      - name: Build unit tests
+        run: cmake --build ${build_dir} -- -j$(nproc)
+      - name: Run unit tests
+        run: cd ${build_dir}/test && ctest
