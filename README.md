@@ -1,4 +1,4 @@
-# group-02 [![Build Status](https://travis-ci.com/DIT112-V20/group-02.svg?branch=master)](https://travis-ci.com/DIT112-V20/group-02)
+# group-02 ![Arduino](https://github.com/DIT112-V20/group-02/workflows/Group%202%20Arduino%20CI/badge.svg)![Android](https://github.com/DIT112-V20/group-02/workflows/Group%202%20Android%20CI/badge.svg)
 
 ## What are you going to make?
 
@@ -19,7 +19,10 @@ With the provided arduino car, included hardware, and external devices that comm
 
 ## Software:
 
+- [SmartCar Library](https://www.arduinolibraries.info/libraries/smartcar-shield)
 - [Arduino IDE](https://www.arduino.cc/)
+- [VS Code](https://code.visualstudio.com/)
+- [Android Studio](https://developer.android.com/studio)
 
 ## Developers:
 
