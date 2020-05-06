@@ -6,8 +6,10 @@ import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
 import java.net.InetAddress
 
@@ -25,12 +27,26 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        progressBarMain.visibility = View.INVISIBLE
+        buttonStopSearch.isEnabled = false
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
         connect_to_car.setOnClickListener { connectToCar() }
+        buttonStopSearch.setOnClickListener { stopSearch() }
+    }
+
+    private fun stopSearch() {
+        buttonStopSearch.isEnabled = false
+        progressBarMain.visibility = View.INVISIBLE
+        nsdManager!!.stopServiceDiscovery(discoverListener)
+        tearDown()
+        connect_to_car.isEnabled = true
     }
 
     private fun connectToCar() {
+        connect_to_car.isEnabled = false
+        progressBarMain.visibility = View.VISIBLE
         nsdManager!!.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, discoverListener)
+        buttonStopSearch.isEnabled = true
     }
 
     private val discoverListener = object: NsdManager.DiscoveryListener {
@@ -44,8 +60,9 @@ class MainActivity : AppCompatActivity() {
             nsdManager!!.stopServiceDiscovery(this)
         }
 
-        override fun onDiscoveryStarted(regType: String) {
+        override fun onDiscoveryStarted(serviceType: String?) {
             // Start service discovery stuff
+            longToast("Searching for nearby car...")
         }
 
         override fun onDiscoveryStopped(serviceType: String?) {
