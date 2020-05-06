@@ -20,11 +20,12 @@ jobs:
           arduino-cli core update-index --additional-urls "https://dl.espressif.com/dl/package_esp32_index.json"
           arduino-cli core install esp32:esp32 --additional-urls "https://dl.espressif.com/dl/package_esp32_index.json"
           arduino-cli lib install "Smartcar shield"
+          arduino-cli lib install "ESP32 AnalogWrite"
+          arduino-cli lib install "ServoESP32"
+          arduino-cli lib install "VL53L0X"
       - name: Build sketch
         run: |
-          arduino-cli compile -b esp32:esp32:esp32doit-devkit-v1 arduino/SmartcarWebserver/SmartcarWebserver.ino
-          arduino-cli compile -b esp32:esp32:esp32doit-devkit-v1 arduino/SmartcarWebserverWithClass/SmartcarWebserverWithClass.ino
-          arduino-cli compile -b esp32:esp32:esp32doit-devkit-v1 arduino/SmartcarWebserverTestable/SmartcarWebserverTestable.ino
+          arduino-cli compile -b esp32:esp32:esp32doit-devkit-v1 SmartCar/SmartCar.ino
   run-unit-tests:
     runs-on: ubuntu-18.04
     strategy:

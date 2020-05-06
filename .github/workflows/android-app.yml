@@ -14,28 +14,28 @@ jobs:
         uses: actions/checkout@v2
       - name: Build app
         run: |
-          cd android
+          cd app
           ./gradlew build --stacktrace
-  run-unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Clone Repo
-        uses: actions/checkout@v2
-      - name: Run unit tests
-        run: |
-          cd android
-          ./gradlew test --info
-  run-instrumented-tests:
-    runs-on: macos-latest
-    steps:
-      - name: Clone Repo
-        uses: actions/checkout@v2
-      - name: Run instrumented tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: cd android && ./gradlew connectedAndroidTest
+  # run-unit-tests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Set up JDK 1.8
+  #       uses: actions/setup-java@v1
+  #       with:
+  #         java-version: 1.8
+  #     - name: Clone Repo
+  #       uses: actions/checkout@v2
+  #     - name: Run unit tests
+  #       run: |
+  #         cd app
+  #         ./gradlew test --info
+  # run-instrumented-tests:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: Clone Repo
+  #       uses: actions/checkout@v2
+  #     - name: Run instrumented tests
+  #       uses: reactivecircus/android-emulator-runner@v2
+  #       with:
+  #         api-level: 29
+  #         script: cd android && ./gradlew connectedAndroidTest
