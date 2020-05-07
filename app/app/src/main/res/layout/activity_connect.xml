@@ -4,23 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_gradient">
+    android:background="@drawable/background_drive">
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="326dp"
-        android:layout_height="73dp"
+        android:layout_width="333dp"
+        android:layout_height="48dp"
         android:clickable="false"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="@font/segoebold"
         android:text="@string/control_the_car"
         android:textColor="#000000"
         android:textSize="30sp"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="56dp"
-        tools:layout_editor_absoluteY="77dp" />
+        tools:layout_editor_absoluteX="62dp"
+        tools:layout_editor_absoluteY="15dp" />
 
     <ToggleButton
         android:id="@+id/toggleDriveMode"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@drawable/button_help"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:text="@string/manual"
@@ -28,10 +30,10 @@
         android:textOn="@string/automatic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.263" />
+        app:layout_constraintVertical_bias="0.765" />
 
     <Button
         android:id="@+id/buttonBackward"
@@ -44,7 +46,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.685" />
+        app:layout_constraintVertical_bias="0.612" />
 
     <Button
         android:id="@+id/buttonForward"
@@ -57,7 +59,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.412" />
+        app:layout_constraintVertical_bias="0.339" />
 
     <Button
         android:id="@+id/buttonLeft"
@@ -67,10 +69,10 @@
         android:background="@drawable/ic_arrow_back_24px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.193"
+        app:layout_constraintHorizontal_bias="0.203"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.548" />
+        app:layout_constraintVertical_bias="0.475" />
 
     <Button
         android:id="@+id/buttonRight"
@@ -83,17 +85,17 @@
         app:layout_constraintHorizontal_bias="0.803"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.548" />
+        app:layout_constraintVertical_bias="0.475" />
 
     <Button
         android:id="@+id/buttonExit"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="48dp"
         android:layout_height="47dp"
-        android:background="@drawable/ic_cancel_24px"
+        android:background="@drawable/ic_arrow_back_24px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.044"
+        app:layout_constraintHorizontal_bias="0.019"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.023" />
@@ -101,27 +103,29 @@
     <Button
         android:id="@+id/buttonStop"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="81dp"
-        android:layout_height="80dp"
+        android:layout_width="66dp"
+        android:layout_height="68dp"
         android:background="@drawable/ic_pan_tool_24px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.887"
+        app:layout_constraintHorizontal_bias="0.927"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.916" />
+        app:layout_constraintVertical_bias="0.956" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="48dp"
-        android:layout_height="22dp"
+        android:layout_width="71dp"
+        android:layout_height="38dp"
+        android:fontFamily="@font/segoebold"
         android:text="@string/stop"
-        android:textSize="18sp"
+        android:textColor="#000000"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.87"
+        app:layout_constraintHorizontal_bias="0.952"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.954" />
+        app:layout_constraintVertical_bias="0.842" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

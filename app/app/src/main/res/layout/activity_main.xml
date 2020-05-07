@@ -8,67 +8,80 @@
     android:gravity="center"
     android:orientation="vertical"
     tools:context="com.example.app.MainActivity"
-    android:background="@drawable/main_gradient">
+    android:background="@drawable/background">
 
     <Button
         android:id="@+id/connect_to_car"
-        android:layout_width="182dp"
-        android:layout_height="81dp"
-        android:layout_marginBottom="272dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="162dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="416dp"
+        android:background="@drawable/button"
         android:text="@string/drive_car"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.224"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/help_button"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="146dp"
-        android:layout_height="63dp"
+        android:layout_height="53dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/button_help"
         android:text="@string/help"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="Help" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="192dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="108dp"
+        android:layout_width="213dp"
+        android:layout_height="53dp"
         android:clickable="false"
+        android:fontFamily="@font/segoebold"
         android:text="@string/smartcar_app"
-        android:textColor="#000000"
-        android:textSize="30sp"
+        android:textColor="#FFFFFF"
+        android:textSize="42sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.53"
+        app:layout_constraintHorizontal_bias="0.183"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.084" />
 
     <Switch
         android:id="@+id/switch-bluetooth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_width="178dp"
+        android:layout_height="25dp"
+        android:fontFamily="@font/segoeui"
         android:text="@string/toggle_bluetooth"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connect_to_car" />
-
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="114dp"
-        android:layout_height="99dp"
-        android:layout_margin="32dp"
-        android:background="@drawable/ic_airport_shuttle_24px"
-        android:contentDescription="@string/logo"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.243"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.268" />
+        app:layout_constraintVertical_bias="0.426" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="200dp"
+        android:layout_height="44dp"
+        android:fontFamily="@font/segoeitalic"
+        android:text="@string/description"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.169"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.165" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
