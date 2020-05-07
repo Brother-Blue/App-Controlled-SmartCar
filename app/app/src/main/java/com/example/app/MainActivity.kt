@@ -102,6 +102,8 @@ class MainActivity : AppCompatActivity() {
             mServiceInfo!!.port = serviceInfo.port
             val hostAddress: InetAddress = serviceInfo.host
             val intent = Intent(this@MainActivity, WifiConnectActivity::class.java)
+            intent.putExtra(ADDRESS_KEY, hostAddress)
+            intent.putExtra(PORT_KEY, mServiceInfo!!.port)
             toast("Connected to car!")
             startActivity(intent)
         }
@@ -111,5 +113,10 @@ class MainActivity : AppCompatActivity() {
         nsdManager!!.apply {
             stopServiceDiscovery(discoverListener)
         }
+    }
+
+    companion object {
+        private const val ADDRESS_KEY = "INET_HOST_ADDRESS"
+        private const val PORT_KEY = "INET_ADDRESS_PORT"
     }
 }
