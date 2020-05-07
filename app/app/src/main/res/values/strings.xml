@@ -9,6 +9,7 @@
     <string name="bluetooth_connection_error">Please enable bluetooth to continue.</string>
     <string name="bluetooth_not_supported">Bluetooth is not supported on this device.</string>
     <string name="toggle_bluetooth">Toggle Bluetooth</string>
+    <string name="logo">logo </string>
 
     <string name="manual">Manual</string>
     <string name="automatic">Automatic</string>

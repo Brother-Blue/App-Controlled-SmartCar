@@ -63,7 +63,12 @@
         android:layout_height="99dp"
         android:layout_margin="32dp"
         android:background="@drawable/ic_airport_shuttle_24px"
-        tools:layout_editor_absoluteX="128dp"
-        tools:layout_editor_absoluteY="171dp" />
+        android:contentDescription="@string/logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.268" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
